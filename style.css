@@ -1,0 +1,18 @@
+.featuredArticle img {
+  float: left;
+  clear: left;
+  padding: 10px;
+}
+.featuredArticle {
+  overflow: auto;
+  padding: 1em;
+}
+
+.hide {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}

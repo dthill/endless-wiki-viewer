@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Endless Featured Wiki</title>
+	<link rel="stylesheet" href="style.css" media="screen" type="text/css">
+</head>
+<body>
+
+	
+	<div id="articles">
+		
+	</div>
+
+	<script id="featuredArticleTemp" type="text/x-handlebars-template">
+		<div class="featuredArticle">
+			<a href="{{url}}">
+				{{thumbnailSource}}
+				<h3>{{title}}</h3>
+				<p>{{extract}}</p>
+			</a>
+		</div>
+	</script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="main.js"></script>
+</body>
+</html>
