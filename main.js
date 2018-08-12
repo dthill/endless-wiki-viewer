@@ -82,33 +82,59 @@ window.addEventListener("load", function(){
   getArticles();
 })
 
-
-// Get the modal
-var modal = document.getElementById('articleModal');
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-    modal.style.display = "none";
-}
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
+//open links in new window add event listener click for modal catch all clicks 
+//fix api mistake single article or errors
+//catch api errors
 
 
-
-
+//open modal load article content
 document.getElementById("articles").addEventListener("click", function(event){
   if(event.target = "a"){
   event.preventDefault();
     $.get(event.target.parentNode.getAttribute("href"), function(receivedData){
       document.getElementById("article-content").innerHTML = receivedData;
-      document.getElementById("article-title").innerHTML = event.target.parentNode.children[1].innerHTML;
-      modal.style.display = "block";
+      document.getElementById("article-title").innerHTML = event.target.parentNode.getAttribute("data-title");
+      openModal()
     });
-  }
+ }
 });
 
+
+
+//modal
+var scrollPosition;
+
+function disableScroll(){
+  window.scrollTo(scrollPosition,0);
+}
+
+function toggleModal() {
+  scrollPosition = window.scrollY
+  document.getElementsByClassName("modal")[0].classList.toggle("show-modal");
+  document.getElementById("article-content").scrollTop = 0;
+}
+
+function openModal(){
+  toggleModal();
+  document.addEventListener("scroll", disableScroll);
+}
+
+function closeModal(){
+  toggleModal();
+  document.removeEventListener("scroll", disableScroll);
+}
+
+document.getElementsByClassName("close-button")[0].addEventListener("click", closeModal);
+window.addEventListener("click", function(event) {
+    if (event.target === document.getElementsByClassName("modal")[0]) {
+        closeModal();
+    }
+});
+
+
+
+document.getElementsByClassName("modal")[0].addEventListener("click", function(event){
+  event.preventDefault();
+  console.log(event.target.getAttribute("href"));
+  window.open(event.target.getAttribute("href"), "_blank");
+});
