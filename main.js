@@ -105,7 +105,8 @@ document.getElementById("articles").addEventListener("click", function(event){
   if(event.target = "a"){
   event.preventDefault();
     $.get(event.target.parentNode.getAttribute("href"), function(receivedData){
-      document.getElementById("article-content").innerHTML = receivedData
+      document.getElementById("article-content").innerHTML = receivedData;
+      document.getElementById("article-title").innerHTML = event.target.parentNode.children[1].innerHTML;
       modal.style.display = "block";
     });
   }
