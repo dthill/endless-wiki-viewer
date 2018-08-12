@@ -135,6 +135,5 @@ window.addEventListener("click", function(event) {
 
 document.getElementsByClassName("modal")[0].addEventListener("click", function(event){
   event.preventDefault();
-  console.log(event.target.getAttribute("href"));
   window.open(event.target.getAttribute("href"), "_blank");
 });
