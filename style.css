@@ -20,10 +20,11 @@ h1 {
 
 
   #article-content {
-    width: 97%;
+    width: 100%;
     height: 95%;
     overflow: auto;
     overflow-wrap: break-word;
+    margin: 0 2em;
   }
 
 
@@ -65,7 +66,7 @@ modal styles
     background-color: lightgray;
     font-size: 1.5em;
 }
-.close-button:hover {
+.close-button:hover, .previous-button:hover, .next-button:hover {
     background-color: darkgray;
 }
 .show-modal {
@@ -77,4 +78,21 @@ modal styles
 
 .modal-open{
   display: fixed;
+}
+
+.previous-button, .next-button {
+  position: absolute;
+  top: 50%;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  background-color: lightgray;
+  font-size: 1.5em;
+}
+.previous-button{
+  left: 0;
+}
+.next-button{
+  right: 0;
 }

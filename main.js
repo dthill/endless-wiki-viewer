@@ -117,7 +117,7 @@ document.getElementById("articles").addEventListener("click", function(event){
 
 
 //modal
-var scrollPosition;
+var scrollPosition = 0;
 
 function toggleModal() {
   document.getElementsByClassName("modal")[0].classList.toggle("show-modal");
@@ -127,11 +127,9 @@ function toggleModal() {
 function openModal(){
   scrollPosition = window.scrollY;
   toggleModal();
-  document.body.classList.add("modal-open");
 }
 
 function closeModal(){
-  document.body.classList.remove("modal-open");
   window.scrollTo(0,scrollPosition);
   toggleModal();
 }
