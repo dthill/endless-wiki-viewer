@@ -77,5 +77,4 @@ modal styles
 
 .modal-open{
   display: fixed;
-  overflow: hidden;
 }
