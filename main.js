@@ -131,7 +131,7 @@ function openModal(){
 }
 
 function closeModal(){
-  document.body.classList.add("modal-open");
+  document.body.classList.remove("modal-open");
   window.scrollTo(0,scrollPosition);
   toggleModal();
 }
