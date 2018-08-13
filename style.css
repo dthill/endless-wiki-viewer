@@ -20,14 +20,16 @@ h1 {
 
 
   #article-content {
-    height: 90vh;
+    width: 97%;
+    height: 95%;
     overflow: auto;
     overflow-wrap: break-word;
   }
 
 
-
-
+/*
+modal styles
+*/
 .modal {
     position: fixed;
     left: 0;

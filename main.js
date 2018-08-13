@@ -1,25 +1,40 @@
 const WIKI_URL = "https://en.wikipedia.org";
 var requestRandomArticles = "https://en.wikipedia.org/w/api.php?&action=query&format=json&prop=extracts%7Cpageimages&list=&continue=gcmcontinue%7C%7C&generator=categorymembers&exchars=500&exlimit=20&exintro=1&explaintext=1&exsectionformat=plain&piprop=thumbnail&pithumbsize=150&pilimit=20&gcmtitle=Category%3AFeatured_articles&gcmprop=ids%7Ctitle%7Ctimestamp&gcmtype=page&gcmcontinue=2015-12-19%2023%3A10%3A09%7C7875665&gcmlimit=20&gcmsort=timestamp&gcmdir=older&gcmstart=2016-01-01T12%3A09%3A31.000Z";
+// var queryJSON = {
+//   "action": "query",
+//   "format": "json",
+//   "prop": "extracts|pageimages",
+//   "generator": "categorymembers",
+//   "exchars": "500",
+//   "exlimit": "20",
+//   "exintro": 1,
+//   "explaintext": 1,
+//   "exsectionformat": "plain",
+//   "piprop": "thumbnail",
+//   "pithumbsize": "100",
+//   "pilimit": "20",
+//   "gcmtitle": "Category:Featured_articles",
+//   "gcmprop": "ids|title|timestamp",
+//   "gcmtype": "page",
+//   "gcmlimit": "20",
+//   "gcmsort": "timestamp",
+//   "gcmdir": "older",
+//   "gcmstart": "2016-01-01T12:09:31.000Z"
+// };
+
 var queryJSON = {
   "action": "query",
   "format": "json",
   "prop": "extracts|pageimages",
-  "generator": "categorymembers",
+  "generator": "random",
   "exchars": "500",
   "exlimit": "20",
   "exintro": 1,
   "explaintext": 1,
-  "exsectionformat": "plain",
-  "piprop": "thumbnail",
   "pithumbsize": "100",
   "pilimit": "20",
-  "gcmtitle": "Category:Featured_articles",
-  "gcmprop": "ids|title|timestamp",
-  "gcmtype": "page",
-  "gcmlimit": "20",
-  "gcmsort": "timestamp",
-  "gcmdir": "older",
-  "gcmstart": "2016-01-01T12:09:31.000Z"
+  "grnnamespace": "0",
+  "grnlimit": "20"
 };
 
 function toTemplate(htmlTemplate, dataObject){
@@ -32,7 +47,7 @@ function toTemplate(htmlTemplate, dataObject){
 }
 
 function randomDate(){
-  var startDate = new Date(2008,0,1).getTime();
+  var startDate = new Date(2012,0,1).getTime();
   var endDate = new Date().getTime();
   //return year + "-" + month + "-" + day + "T12:09:31.000Z"; 
   return new Date(Math.floor(Math.random() * (endDate - startDate)) + startDate).toISOString();
@@ -82,9 +97,9 @@ window.addEventListener("load", function(){
   getArticles();
 })
 
-//open links in new window add event listener click for modal catch all clicks 
-//fix api mistake single article or errors
 //catch api errors
+//next article arrow
+//bottom of article hidden
 
 
 //open modal load article content
@@ -125,15 +140,24 @@ function closeModal(){
 }
 
 document.getElementsByClassName("close-button")[0].addEventListener("click", closeModal);
+
 window.addEventListener("click", function(event) {
     if (event.target === document.getElementsByClassName("modal")[0]) {
         closeModal();
     }
 });
 
-
-
 document.getElementsByClassName("modal")[0].addEventListener("click", function(event){
   event.preventDefault();
-  window.open(event.target.getAttribute("href"), "_blank");
+  if(event.target.getAttribute("href")){
+    window.open(event.target.getAttribute("href"), "_blank");
+  } else if(event.target.parentNode.getAttribute("href")){
+    window.open(event.target.parentNode.getAttribute("href"), "_blank");
+  }
+});
+
+document.addEventListener("keydown", function(event){
+    if (event.keyCode == 27) {
+        closeModal();
+    }
 });
