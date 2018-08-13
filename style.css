@@ -57,12 +57,13 @@ modal styles
 }
 .close-button {
     float: right;
-    width: 1.5rem;
-    line-height: 1.5rem;
+    width: 2rem;
+    line-height: 2rem;
     text-align: center;
     cursor: pointer;
     border-radius: 0.25rem;
     background-color: lightgray;
+    font-size: 1.5em;
 }
 .close-button:hover {
     background-color: darkgray;
@@ -74,3 +75,7 @@ modal styles
     transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
 }
 
+.modal-open{
+  display: fixed;
+  overflow: hidden;
+}

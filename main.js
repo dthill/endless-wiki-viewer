@@ -119,24 +119,21 @@ document.getElementById("articles").addEventListener("click", function(event){
 //modal
 var scrollPosition;
 
-function disableScroll(){
-  window.scrollTo(scrollPosition,0);
-}
-
 function toggleModal() {
-  scrollPosition = window.scrollY
   document.getElementsByClassName("modal")[0].classList.toggle("show-modal");
   document.getElementById("article-content").scrollTop = 0;
 }
 
 function openModal(){
+  scrollPosition = window.scrollY;
   toggleModal();
-  document.addEventListener("scroll", disableScroll);
+  document.body.classList.add("modal-open");
 }
 
 function closeModal(){
+  document.body.classList.add("modal-open");
+  window.scrollTo(0,scrollPosition);
   toggleModal();
-  document.removeEventListener("scroll", disableScroll);
 }
 
 document.getElementsByClassName("close-button")[0].addEventListener("click", closeModal);
