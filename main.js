@@ -1,41 +1,41 @@
 const WIKI_URL = "https://en.wikipedia.org";
 var requestRandomArticles = "https://en.wikipedia.org/w/api.php?&action=query&format=json&prop=extracts%7Cpageimages&list=&continue=gcmcontinue%7C%7C&generator=categorymembers&exchars=500&exlimit=20&exintro=1&explaintext=1&exsectionformat=plain&piprop=thumbnail&pithumbsize=150&pilimit=20&gcmtitle=Category%3AFeatured_articles&gcmprop=ids%7Ctitle%7Ctimestamp&gcmtype=page&gcmcontinue=2015-12-19%2023%3A10%3A09%7C7875665&gcmlimit=20&gcmsort=timestamp&gcmdir=older&gcmstart=2016-01-01T12%3A09%3A31.000Z";
-// var queryJSON = {
-//   "action": "query",
-//   "format": "json",
-//   "prop": "extracts|pageimages",
-//   "generator": "categorymembers",
-//   "exchars": "500",
-//   "exlimit": "20",
-//   "exintro": 1,
-//   "explaintext": 1,
-//   "exsectionformat": "plain",
-//   "piprop": "thumbnail",
-//   "pithumbsize": "100",
-//   "pilimit": "20",
-//   "gcmtitle": "Category:Featured_articles",
-//   "gcmprop": "ids|title|timestamp",
-//   "gcmtype": "page",
-//   "gcmlimit": "20",
-//   "gcmsort": "timestamp",
-//   "gcmdir": "older",
-//   "gcmstart": "2016-01-01T12:09:31.000Z"
-// };
-
 var queryJSON = {
   "action": "query",
   "format": "json",
   "prop": "extracts|pageimages",
-  "generator": "random",
+  "generator": "categorymembers",
   "exchars": "500",
   "exlimit": "20",
   "exintro": 1,
   "explaintext": 1,
+  "exsectionformat": "plain",
+  "piprop": "thumbnail",
   "pithumbsize": "100",
   "pilimit": "20",
-  "grnnamespace": "0",
-  "grnlimit": "20"
+  "gcmtitle": "Category:Featured_articles",
+  "gcmprop": "ids|title|timestamp",
+  "gcmtype": "page",
+  "gcmlimit": "20",
+  "gcmsort": "timestamp",
+  "gcmdir": "older",
+  "gcmstart": "2016-01-01T12:09:31.000Z"
 };
+
+// var queryJSON = {
+//   "action": "query",
+//   "format": "json",
+//   "prop": "extracts|pageimages",
+//   "generator": "random",
+//   "exchars": "500",
+//   "exlimit": "20",
+//   "exintro": 1,
+//   "explaintext": 1,
+//   "pithumbsize": "100",
+//   "pilimit": "20",
+//   "grnnamespace": "0",
+//   "grnlimit": "20"
+// };
 
 function toTemplate(htmlTemplate, dataObject){
   htmlTemplate = htmlTemplate.innerHTML
@@ -75,7 +75,7 @@ function getArticles(){
         var thumb = "";
       }
       var dataObj = {
-        url: "https://en.wikipedia.org/api/rest_v1/page/html/" + receivedData.query.pages[articleData]["title"],
+        url: "https://en.wikipedia.org/api/rest_v1/page/mobile-html/" + receivedData.query.pages[articleData]["title"],
         title: receivedData.query.pages[articleData]["title"],
         extract: receivedData.query.pages[articleData]["extract"],
         thumbnailSource: thumb
@@ -98,25 +98,30 @@ window.addEventListener("load", function(){
 })
 
 //catch api errors
-//next article arrow
-//bottom of article hidden
+//adjust number of api calls
+//css for article hidden bottom horizontal scroll
 
 
 //open modal load article content
 document.getElementById("articles").addEventListener("click", function(event){
   if(event.target = "a"){
   event.preventDefault();
-    $.get(event.target.parentNode.getAttribute("href"), function(receivedData){
-      document.getElementById("article-content").innerHTML = receivedData;
-      document.getElementById("article-title").innerHTML = event.target.parentNode.getAttribute("data-title");
-      openModal()
-    });
- }
+  loadModalContents(event.target.parentNode);
+  openModal();
+  }
 });
 
 
 
 //modal
+function loadModalContents(articleAnchor){
+$.get(articleAnchor.getAttribute("href"), function(receivedData){
+    document.getElementById("article-content").innerHTML = receivedData;
+    document.getElementById("article-content").dataset.title = articleAnchor.dataset.title;
+    document.getElementById("article-title").innerHTML = articleAnchor.dataset.title;
+  });
+}
+
 var scrollPosition = 0;
 
 function toggleModal() {
@@ -155,4 +160,20 @@ document.addEventListener("keydown", function(event){
     if (event.keyCode == 27) {
         closeModal();
     }
+});
+
+document.getElementsByClassName("previous-button")[0].addEventListener("click", function(event){
+  var title = document.getElementById("article-content").dataset.title;
+  if(document.querySelector("[data-title='"+ title +"']").parentNode.previousElementSibling){
+    var previousArticle = document.querySelector("[data-title='"+ title +"']").parentNode.previousElementSibling.children[0];
+    loadModalContents(previousArticle);
+  }
+});
+
+document.getElementsByClassName("next-button")[0].addEventListener("click", function(event){
+  var title = document.getElementById("article-content").dataset.title;
+  if(document.querySelector("[data-title='"+ title +"']").parentNode.nextElementSibling){
+    var nextArticle = document.querySelector("[data-title='"+ title +"']").parentNode.nextElementSibling.children[0];
+    loadModalContents(nextArticle);
+  }
 });
