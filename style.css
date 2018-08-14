@@ -20,13 +20,23 @@ h1 {
 
 
   #article-content {
+    display: block;
     height: 95%;
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: auto;
     overflow-wrap: break-word;
-    margin: 0 0.5rem;
+    margin: 0 0.6rem;
   }
 
 
+/*
+navbar styles
+*/
+.w3-container {
+  width: 90%;
+  margin-left: auto;
+    margin-right: auto;
+}
 /*
 modal styles
 */
@@ -36,7 +46,7 @@ modal styles
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.4);
     opacity: 0;
     visibility: hidden;
     transform: scale(1.1);
@@ -82,7 +92,7 @@ modal styles
 .previous-button, .next-button {
   position: absolute;
   top: 50%;
-  padding: 0.5rem;
+  padding: 0.4rem;
   text-align: center;
   cursor: pointer;
   border-radius: 0.25rem;

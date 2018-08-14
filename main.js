@@ -1,5 +1,6 @@
 const WIKI_URL = "https://en.wikipedia.org";
 var requestRandomArticles = "https://en.wikipedia.org/w/api.php?&action=query&format=json&prop=extracts%7Cpageimages&list=&continue=gcmcontinue%7C%7C&generator=categorymembers&exchars=500&exlimit=20&exintro=1&explaintext=1&exsectionformat=plain&piprop=thumbnail&pithumbsize=150&pilimit=20&gcmtitle=Category%3AFeatured_articles&gcmprop=ids%7Ctitle%7Ctimestamp&gcmtype=page&gcmcontinue=2015-12-19%2023%3A10%3A09%7C7875665&gcmlimit=20&gcmsort=timestamp&gcmdir=older&gcmstart=2016-01-01T12%3A09%3A31.000Z";
+
 var queryJSON = {
   "action": "query",
   "format": "json",
@@ -88,7 +89,7 @@ function getArticles(){
 
 document.addEventListener("scroll", function(event){
   //prop scrollheight on window and compare with document.offsetHeight
-  if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight * 0.8) {
+  if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight * 0.9) {
       getArticles();
     }
 });
@@ -127,6 +128,7 @@ var scrollPosition = 0;
 function toggleModal() {
   document.getElementsByClassName("modal")[0].classList.toggle("show-modal");
   document.getElementById("article-content").scrollTop = 0;
+  document.getElementById("article-content").scrollLeft = 0;
 }
 
 function openModal(){
@@ -167,6 +169,8 @@ document.getElementsByClassName("previous-button")[0].addEventListener("click", 
   if(document.querySelector("[data-title='"+ title +"']").parentNode.previousElementSibling){
     var previousArticle = document.querySelector("[data-title='"+ title +"']").parentNode.previousElementSibling.children[0];
     loadModalContents(previousArticle);
+    document.getElementById("article-content").scrollTop = 0;
+    document.getElementById("article-content").scrollLeft = 0;
   }
 });
 
@@ -175,5 +179,17 @@ document.getElementsByClassName("next-button")[0].addEventListener("click", func
   if(document.querySelector("[data-title='"+ title +"']").parentNode.nextElementSibling){
     var nextArticle = document.querySelector("[data-title='"+ title +"']").parentNode.nextElementSibling.children[0];
     loadModalContents(nextArticle);
+    document.getElementById("article-content").scrollTop = 0;
+    document.getElementById("article-content").scrollLeft = 0;
   }
 });
+
+//menu
+function myFunction() {
+    var x = document.getElementById("demo");
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+    } else { 
+        x.className = x.className.replace(" w3-show", "");
+    }
+}
