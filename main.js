@@ -244,10 +244,11 @@ document.getElementById("remove-article").addEventListener("click", function(eve
   saveToStorage();
 });
 
+/*
 document.getElementById("remove-all-articles").addEventListener("click", function(event){
   document.getElementById("saved-articles").innerHTML = "";
   saveToStorage();
   $(".save-extract").removeClass("d-none");
   $(".remove-extract").addClass("d-none");
-})
+})*/
 
