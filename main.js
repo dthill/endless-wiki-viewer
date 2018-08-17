@@ -1,42 +1,52 @@
-const WIKI_URL = "https://en.wikipedia.org";
-var requestRandomArticles = "https://en.wikipedia.org/w/api.php?&action=query&format=json&prop=extracts%7Cpageimages&list=&continue=gcmcontinue%7C%7C&generator=categorymembers&exchars=500&exlimit=20&exintro=1&explaintext=1&exsectionformat=plain&piprop=thumbnail&pithumbsize=150&pilimit=20&gcmtitle=Category%3AFeatured_articles&gcmprop=ids%7Ctitle%7Ctimestamp&gcmtype=page&gcmcontinue=2015-12-19%2023%3A10%3A09%7C7875665&gcmlimit=20&gcmsort=timestamp&gcmdir=older&gcmstart=2016-01-01T12%3A09%3A31.000Z";
-
-var queryJSON = {
-  "action": "query",
-  "format": "json",
-  "prop": "extracts|pageimages",
-  "generator": "categorymembers",
-  "exchars": "500",
-  "exlimit": "20",
-  "exintro": 1,
-  "explaintext": 1,
-  "exsectionformat": "plain",
-  "piprop": "thumbnail",
-  "pithumbsize": "100",
-  "pilimit": "20",
-  "gcmtitle": "Category:Featured_articles",
-  "gcmprop": "ids|title|timestamp",
-  "gcmtype": "page",
-  "gcmlimit": "20",
-  "gcmsort": "timestamp",
-  "gcmdir": "older",
-  "gcmstart": "2016-01-01T12:09:31.000Z"
-};
+//catch api errors
+//adjust number of api calls
+//create cards layout
+//add remove all
+//add remove selected
+//localStorage for reading list
 
 // var queryJSON = {
 //   "action": "query",
 //   "format": "json",
 //   "prop": "extracts|pageimages",
-//   "generator": "random",
+//   "generator": "categorymembers",
 //   "exchars": "500",
 //   "exlimit": "20",
 //   "exintro": 1,
 //   "explaintext": 1,
+//   "exsectionformat": "plain",
+//   "piprop": "thumbnail",
 //   "pithumbsize": "100",
 //   "pilimit": "20",
-//   "grnnamespace": "0",
-//   "grnlimit": "20"
+//   "gcmtitle": "Category:Featured_articles",
+//   "gcmprop": "ids|title|timestamp",
+//   "gcmtype": "page",
+//   "gcmlimit": "20",
+//   "gcmsort": "timestamp",
+//   "gcmdir": "older",
+//   "gcmstart": "2016-01-01T12:09:31.000Z"
 // };
+
+const WIKI_URL = "https://en.wikipedia.org";
+
+var queryJSON = {
+  "action": "query",
+  "format": "json",
+  "prop": "extracts|pageimages",
+  "generator": "random",
+  "exchars": "500",
+  "exlimit": "20",
+  "exintro": 1,
+  "explaintext": 1,
+  "pithumbsize": "100",
+  "pilimit": "20",
+  "grnnamespace": "0",
+  "grnlimit": "20"
+};
+
+var scrollPositionArticles = 0;
+var scrollPositionSaved = 0;
+
 
 function toTemplate(htmlTemplate, dataObject){
   htmlTemplate = htmlTemplate.innerHTML
@@ -47,22 +57,11 @@ function toTemplate(htmlTemplate, dataObject){
   return htmlTemplate;
 }
 
-function randomDate(){
-  var startDate = new Date(2012,0,1).getTime();
-  var endDate = new Date().getTime();
-  //return year + "-" + month + "-" + day + "T12:09:31.000Z"; 
-  return new Date(Math.floor(Math.random() * (endDate - startDate)) + startDate).toISOString();
-}
 
 function createAPIurl(obj){
-  var result = "/w/api.php?"
-  var ranDate = randomDate()
+  var result = "/w/api.php?";
   Object.keys(obj).forEach(function(queryKey){
-    if(queryKey === "gcmstart"){
-      result += "&" + queryKey + "=" + ranDate;
-    } else {
-      result += "&" + queryKey + "=" + obj[queryKey];
-    }
+    result += "&" + queryKey + "=" + obj[queryKey];
   });
   return result;
 }
@@ -86,35 +85,17 @@ function getArticles(){
   });
 }
 
+function saveToStorage(){
+  localStorage.setItem("readingList", document.getElementById("saved-articles").innerHTML);
+}
 
-document.addEventListener("scroll", function(event){
-  //prop scrollheight on window and compare with document.offsetHeight
-  if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight * 0.9) {
-      getArticles();
-    }
-});
-
-window.addEventListener("load", function(){
-  getArticles();
-})
-
-//catch api errors
-//adjust number of api calls
-//css for article hidden bottom horizontal scroll
-
-
-//open modal load article content
-document.getElementById("articles").addEventListener("click", function(event){
-  if(event.target = "a"){
-  event.preventDefault();
-  loadModalContents(event.target.parentNode);
-  openModal();
+function retrieveFromStorage(){
+  if(localStorage.getItem("readingList")){
+    document.getElementById("saved-articles").innerHTML = localStorage.getItem("readingList");
   }
-});
+}
 
-
-
-//modal
+// load modal modal content
 function loadModalContents(articleAnchor){
 $.get(articleAnchor.getAttribute("href"), function(receivedData){
     document.getElementById("article-content").innerHTML = receivedData;
@@ -123,47 +104,89 @@ $.get(articleAnchor.getAttribute("href"), function(receivedData){
   });
 }
 
-var scrollPosition = 0;
 
-function toggleModal() {
-  document.getElementsByClassName("modal")[0].classList.toggle("show-modal");
-  document.getElementById("article-content").scrollTop = 0;
-  document.getElementById("article-content").scrollLeft = 0;
-}
+window.addEventListener("load", function(){
+  getArticles();
+  retrieveFromStorage();
+})
 
-function openModal(){
-  scrollPosition = window.scrollY;
-  toggleModal();
-}
-
-function closeModal(){
-  window.scrollTo(0,scrollPosition);
-  toggleModal();
-}
-
-document.getElementsByClassName("close-button")[0].addEventListener("click", closeModal);
-
-window.addEventListener("click", function(event) {
-    if (event.target === document.getElementsByClassName("modal")[0]) {
-        closeModal();
+document.getElementById("articles").addEventListener("scroll", function(event){
+  //prop scrollheight on window and compare with document.offsetHeight
+  if (this.clientHeight  >= (this.scrollHeight - this.scrollTop) * 0.8 ) {
+      getArticles();
     }
 });
 
-document.getElementsByClassName("modal")[0].addEventListener("click", function(event){
+//navbar links
+$(".nav-link").on("click", function(event){
+    event.preventDefault();
+    if (this.innerText === "Random Articles"){
+      $(this).parent().siblings().removeClass("active");
+      $(this).parent().addClass("active")
+      document.getElementById("articles").classList.remove("d-none");
+      document.getElementById("saved-articles").classList.add("d-none");
+      scrollPositionArticles = window.scrollY;
+      window.scrollTo(0, scrollPositionSaved);
+    } else if (this.innerText === "Reading List"){
+      //retrive local storage set innerHTML to local storage  
+      $(this).parent().siblings().removeClass("active");
+      $(this).parent().addClass("active")
+      document.getElementById("saved-articles").classList.remove("d-none");
+      document.getElementById("articles").classList.add("d-none")
+      scrollPositionSaved = window.scrollY;
+      window.scrollTo(0, scrollPositionArticles);
+    }
+    
+});
+
+//open modal load article content
+document.getElementById("main-section").addEventListener("click", function(event){
   event.preventDefault();
+  if(event.target.classList.contains("save-extract")){
+    event.target.parentNode.dataset.saved = "true";
+    event.target.classList.add("d-none");
+    event.target.nextElementSibling.classList.remove("d-none");
+    document.getElementById("saved-articles").appendChild(event.target.parentNode.parentNode.cloneNode(true));
+    saveToStorage();
+  } else if(event.target.classList.contains("remove-extract")){
+    event.target.parentNode.dataset.saved = "false";
+    var title = event.target.parentNode.dataset.title;
+    var article = document.getElementById("saved-articles").querySelector("[data-title='"+ title +"']");
+    var extract = document.getElementById("articles").querySelector("[data-title='"+ title +"']");
+    extract.dataset.saved = "false";
+    extract.querySelector(".remove-extract").classList.add("d-none");
+    extract.querySelector(".save-extract").classList.remove("d-none");
+    event.target.classList.add("d-none");
+    event.target.previousElementSibling.classList.remove("d-none");
+    document.getElementById("saved-articles").removeChild(article.parentNode);
+    saveToStorage();
+  } else {
+    loadModalContents(event.target.parentNode);
+    if(event.target.parentNode.dataset.saved === "true"){
+      document.getElementById("remove-article").classList.remove("d-none");
+      document.getElementById("save-article").classList.add("d-none");
+    } else {
+      document.getElementById("save-article").classList.remove("d-none");
+      document.getElementById("remove-article").classList.add("d-none");
+    }
+    $("#myModal").modal();
+    //this is not working: Modal stays in the same position and does not scroll
+    document.getElementById("article-content").scrollTop = 0;
+    document.getElementById("article-content").scrollLeft = 0;
+  }
+});
+
+//make links open in new window
+document.getElementsByClassName("modal")[0].addEventListener("click", function(event){
   if(event.target.getAttribute("href")){
+    event.preventDefault();
     window.open(event.target.getAttribute("href"), "_blank");
   } else if(event.target.parentNode.getAttribute("href")){
     window.open(event.target.parentNode.getAttribute("href"), "_blank");
   }
 });
 
-document.addEventListener("keydown", function(event){
-    if (event.keyCode == 27) {
-        closeModal();
-    }
-});
-
+//previouse button
 document.getElementsByClassName("previous-button")[0].addEventListener("click", function(event){
   var title = document.getElementById("article-content").dataset.title;
   if(document.querySelector("[data-title='"+ title +"']").parentNode.previousElementSibling){
@@ -171,9 +194,18 @@ document.getElementsByClassName("previous-button")[0].addEventListener("click", 
     loadModalContents(previousArticle);
     document.getElementById("article-content").scrollTop = 0;
     document.getElementById("article-content").scrollLeft = 0;
+    if(previousArticle.dataset.saved === "true"){
+      document.getElementById("save-article").classList.add("d-none");
+      document.getElementById("remove-article").classList.remove("d-none");
+    } else {
+      document.getElementById("remove-article").classList.add("d-none");
+      document.getElementById("save-article").classList.remove("d-none");
+    }
   }
 });
 
+
+//next button
 document.getElementsByClassName("next-button")[0].addEventListener("click", function(event){
   var title = document.getElementById("article-content").dataset.title;
   if(document.querySelector("[data-title='"+ title +"']").parentNode.nextElementSibling){
@@ -181,15 +213,41 @@ document.getElementsByClassName("next-button")[0].addEventListener("click", func
     loadModalContents(nextArticle);
     document.getElementById("article-content").scrollTop = 0;
     document.getElementById("article-content").scrollLeft = 0;
+    if(nextArticle.dataset.saved === "true"){
+      document.getElementById("save-article").classList.add("d-none");
+      document.getElementById("remove-article").classList.remove("d-none");
+    } else {
+      document.getElementById("remove-article").classList.add("d-none");
+      document.getElementById("save-article").classList.remove("d-none");
+    }
   }
 });
 
-//menu
-function myFunction() {
-    var x = document.getElementById("demo");
-    if (x.className.indexOf("w3-show") == -1) {
-        x.className += " w3-show";
-    } else { 
-        x.className = x.className.replace(" w3-show", "");
-    }
-}
+
+document.getElementById("save-article").addEventListener("click", function(event){
+  var title = document.getElementById("article-content").dataset.title;
+  var article = document.querySelector("[data-title='"+ title +"']");
+  article.dataset.saved = "true";
+  document.getElementById("saved-articles").appendChild(article.parentNode.cloneNode(true));
+  this.classList.add("d-none");
+  document.getElementById("remove-article").classList.remove("d-none");
+  saveToStorage();
+});
+
+document.getElementById("remove-article").addEventListener("click", function(event){
+  var title = document.getElementById("article-content").dataset.title;
+  var article = document.getElementById("saved-articles").querySelector("[data-title='"+ title +"']");
+  document.querySelector("[data-title='"+ title +"']").dataset.saved = "false";
+  document.getElementById("saved-articles").removeChild(article.parentNode);
+  this.classList.add("d-none");
+  document.getElementById("save-article").classList.remove("d-none");
+  saveToStorage();
+});
+
+document.getElementById("remove-all-articles").addEventListener("click", function(event){
+  document.getElementById("saved-articles").innerHTML = "";
+  saveToStorage();
+  $(".save-extract").removeClass("d-none");
+  $(".remove-extract").addClass("d-none");
+})
+
