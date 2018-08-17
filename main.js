@@ -171,8 +171,6 @@ document.getElementById("main-section").addEventListener("click", function(event
     }
     $("#myModal").modal();
     //this is not working: Modal stays in the same position and does not scroll
-    document.getElementById("article-content").scrollTop = 0;
-    document.getElementById("article-content").scrollLeft = 0;
   }
 });
 
