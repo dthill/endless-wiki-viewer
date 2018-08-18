@@ -11,8 +11,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<div class="container">
-		<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
 		  	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
 		    	<span class="navbar-toggler-icon"></span>
 		  	</button>
@@ -26,11 +25,14 @@
 		        		<a class="nav-link" href="#">Reading List</a>
 		      		</li>
 		    	</ul>
-		    	<!-- <button id="remove-all-articles" type="button" class="btn">Clear Reading List</button> -->
+		    	<button id="remove-all-articles" type="button" class="btn">Clear Reading List</button>
 		  	</div>
 		</nav>
+
+	<!-- The Modal Container-->
+	<div class="container">
 	  <!-- The Modal -->
-	  	<div class="modal fade" id="myModal">
+	  	<div class="modal fade" id="myModal" tabindex="-1">
 	    	<div class="modal-dialog">
 	      		<div class="modal-content">
 	        <!-- Modal Header -->
@@ -46,7 +48,7 @@
 	        		<div class="modal-body">
 	        			<span class="previous-button">&#8249;</span>
 						<span class="next-button">&#8250;</span>
-						<div id="article-content" class="container-fluid"></div>
+						<iframe id="article-content" class="container-fluid"></iframe>
 	        		</div>
 	        <!-- Modal footer -->
 	        		<div class="modal-footer">

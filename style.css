@@ -1,7 +1,7 @@
 
 #articles, #saved-articles {
   overflow: scroll;
-  max-height: 87vh;
+  height: 87vh;
   margin: 0;
   padding: 0;
 }
@@ -24,13 +24,14 @@
 
 .modal-body {
   overflow: hidden;
-  max-height: 100vh;
+  height: 90vh;
 }
 
 #article-content {
   overflow: auto;
-  max-height: 100%;
-  z-index: 1111;
+  height: 73vh;
+  z-index: 2000;
+  border: none;
 }
 
 .modal-dialog {

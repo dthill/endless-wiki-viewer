@@ -1,9 +1,8 @@
 //catch api errors
 //adjust number of api calls
 //create cards layout
-//add remove all
-//add remove selected
-//localStorage for reading list
+//adjust iframe height chrome hides bottom
+//buttons add on mobile position
 
 // var queryJSON = {
 //   "action": "query",
@@ -75,7 +74,7 @@ function getArticles(){
         var thumb = "";
       }
       var dataObj = {
-        url: "https://en.wikipedia.org/api/rest_v1/page/html/" + receivedData.query.pages[articleData]["title"],
+        url: "https://en.wikipedia.org/api/rest_v1/page/mobile-html/" + receivedData.query.pages[articleData]["title"],
         title: receivedData.query.pages[articleData]["title"],
         extract: receivedData.query.pages[articleData]["extract"],
         thumbnailSource: thumb
@@ -98,8 +97,24 @@ function retrieveFromStorage(){
 // load modal modal content
 function loadModalContents(articleAnchor){
 $.get(articleAnchor.getAttribute("href"), function(receivedData){
-    //document.getElementById("article-content").innerHTML = receivedData;
-    document.getElementById("article-content").dataset.title = articleAnchor.dataset.title;
+    var articleContent = document.getElementById("article-content");
+    articleContent.contentDocument.write(receivedData);
+    articleContent.contentDocument.addEventListener("click", function(event){
+      if(event.target.getAttribute("href")){
+        event.preventDefault();
+        window.open(event.target.getAttribute("href"), "_blank");
+      } else if(event.target.parentNode.getAttribute("href")){
+        window.open(event.target.parentNode.getAttribute("href"), "_blank");
+      }
+    });
+    articleContent.contentDocument.addEventListener("keydown", function(event){
+      event.preventDefault();
+      if(event.keyCode === 27 || event.keyCode === 8){
+            $("#myModal").modal("hide");
+      }
+    });
+    articleContent.contentDocument.close();
+    articleContent.dataset.arttitle = articleAnchor.dataset.title;
     document.getElementById("article-title").innerHTML = articleAnchor.dataset.title;
   });
 }
@@ -111,7 +126,6 @@ window.addEventListener("load", function(){
 })
 
 document.getElementById("articles").addEventListener("scroll", function(event){
-  //prop scrollheight on window and compare with document.offsetHeight
   if (this.clientHeight  >= (this.scrollHeight - this.scrollTop) * 0.8 ) {
       getArticles();
     }
@@ -164,7 +178,6 @@ document.getElementById("main-section").addEventListener("click", function(event
     saveToStorage();
   } else if(event.target.parentNode.tagName.toLowerCase() === "a"){
     loadModalContents(event.target.parentNode);
-    console.log(event.target.parentNode)
     if(event.target.parentNode.dataset.saved === "true"){
       document.getElementById("remove-article").classList.remove("d-none");
       document.getElementById("save-article").classList.add("d-none");
@@ -173,23 +186,15 @@ document.getElementById("main-section").addEventListener("click", function(event
       document.getElementById("remove-article").classList.add("d-none");
     }
     $("#myModal").modal();
-    //this is not working: Modal stays in the same position and does not scroll
   }
 });
 
 //make links open in new window
-document.getElementsByClassName("modal")[0].addEventListener("click", function(event){
-  if(event.target.getAttribute("href")){
-    event.preventDefault();
-    window.open(event.target.getAttribute("href"), "_blank");
-  } else if(event.target.parentNode.getAttribute("href")){
-    window.open(event.target.parentNode.getAttribute("href"), "_blank");
-  }
-});
+
 
 //previouse button
 document.getElementsByClassName("previous-button")[0].addEventListener("click", function(event){
-  var title = document.getElementById("article-content").dataset.title;
+  var title = document.getElementById("article-content").dataset.arttitle;
   if(document.querySelector("[data-title='"+ title +"']").parentNode.previousElementSibling){
     var previousArticle = document.querySelector("[data-title='"+ title +"']").parentNode.previousElementSibling.children[0];
     loadModalContents(previousArticle);
@@ -208,7 +213,7 @@ document.getElementsByClassName("previous-button")[0].addEventListener("click", 
 
 //next button
 document.getElementsByClassName("next-button")[0].addEventListener("click", function(event){
-  var title = document.getElementById("article-content").dataset.title;
+  var title = document.getElementById("article-content").dataset.arttitle;
   if(document.querySelector("[data-title='"+ title +"']").parentNode.nextElementSibling){
     var nextArticle = document.querySelector("[data-title='"+ title +"']").parentNode.nextElementSibling.children[0];
     loadModalContents(nextArticle);
@@ -226,30 +231,35 @@ document.getElementsByClassName("next-button")[0].addEventListener("click", func
 
 
 document.getElementById("save-article").addEventListener("click", function(event){
-  var title = document.getElementById("article-content").dataset.title;
+  var title = document.getElementById("article-content").dataset.arttitle;
   var article = document.querySelector("[data-title='"+ title +"']");
   article.dataset.saved = "true";
-  document.getElementById("saved-articles").appendChild(article.parentNode.cloneNode(true));
   this.classList.add("d-none");
+  article.querySelector(".save-extract").classList.add("d-none");
+  article.querySelector(".remove-extract").classList.remove("d-none");
+  document.getElementById("saved-articles").appendChild(article.parentNode.cloneNode(true));
   document.getElementById("remove-article").classList.remove("d-none");
   saveToStorage();
 });
 
 document.getElementById("remove-article").addEventListener("click", function(event){
-  var title = document.getElementById("article-content").dataset.title;
+  var title = document.getElementById("article-content").dataset.arttitle;
   var article = document.getElementById("saved-articles").querySelector("[data-title='"+ title +"']");
-  document.querySelector("[data-title='"+ title +"']").dataset.saved = "false";
+  var extract = document.getElementById("articles").querySelector("[data-title='"+ title +"']");
+  extract.querySelector(".remove-extract").classList.add("d-none");
+  extract.querySelector(".save-extract").classList.remove("d-none");
+  extract.dataset.saved = "false";
   document.getElementById("saved-articles").removeChild(article.parentNode);
   this.classList.add("d-none");
   document.getElementById("save-article").classList.remove("d-none");
   saveToStorage();
 });
 
-/*
+
 document.getElementById("remove-all-articles").addEventListener("click", function(event){
   document.getElementById("saved-articles").innerHTML = "";
   saveToStorage();
   $(".save-extract").removeClass("d-none");
   $(".remove-extract").addClass("d-none");
-})*/
+});
 
