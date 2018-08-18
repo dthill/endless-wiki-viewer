@@ -163,12 +163,11 @@ document.getElementById("main-section").addEventListener("click", function(event
     event.target.previousElementSibling.classList.remove("d-none");
     document.getElementById("saved-articles").removeChild(article.parentNode);
     saveToStorage();
-  } else {
+  } else if(event.target.parentNode.tagName.toLowerCase() === "a"){
     loadModalContents(event.target.parentNode);
-    
-    $("#myModal").modal();
-    //this is not working: Modal stays in the same position and does not scroll
+     $("#myModal").modal();
   }
+  console.log(event.target)
 });
 
 //make links open in new window
