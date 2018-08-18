@@ -26,7 +26,6 @@
 //   "gcmdir": "older",
 //   "gcmstart": "2016-01-01T12:09:31.000Z"
 // };
-console.log("hello")
 
 const WIKI_URL = "https://en.wikipedia.org";
 
@@ -144,31 +143,37 @@ $(".nav-link").on("click", function(event){
 //
 //open modal load article content
 document.getElementById("main-section").addEventListener("click", function(event){
-  // if(event.target.classList.contains("save-extract")){
-  //   event.target.parentNode.dataset.saved = "true";
-  //   event.target.classList.add("d-none");
-  //   event.target.nextElementSibling.classList.remove("d-none");
-  //   document.getElementById("saved-articles").appendChild(event.target.parentNode.parentNode.cloneNode(true));
-  //   saveToStorage();
-  // } else if(event.target.classList.contains("remove-extract")){
-  //   event.target.parentNode.dataset.saved = "false";
-  //   var title = event.target.parentNode.dataset.title;
-  //   var article = document.getElementById("saved-articles").querySelector("[data-title='"+ title +"']");
-  //   var extract = document.getElementById("articles").querySelector("[data-title='"+ title +"']");
-  //   extract.dataset.saved = "false";
-  //   extract.querySelector(".remove-extract").classList.add("d-none");
-  //   extract.querySelector(".save-extract").classList.remove("d-none");
-  //   event.target.classList.add("d-none");
-  //   event.target.previousElementSibling.classList.remove("d-none");
-  //   document.getElementById("saved-articles").removeChild(article.parentNode);
-  //   saveToStorage();
-  // } else 
-  if(event.target.parentNode.tagName.toLowerCase() === "a"){
-    event.preventDefault();
-    loadModalContents(event.target.parentNode);
-     $("#myModal").modal();
+  event.preventDefault();
+  if(event.target.classList.contains("save-extract")){
+    event.target.parentNode.dataset.saved = "true";
+    event.target.classList.add("d-none");
+    event.target.nextElementSibling.classList.remove("d-none");
+    document.getElementById("saved-articles").appendChild(event.target.parentNode.parentNode.cloneNode(true));
+    saveToStorage();
+  } else if(event.target.classList.contains("remove-extract")){
+    event.target.parentNode.dataset.saved = "false";
+    var title = event.target.parentNode.dataset.title;
+    var article = document.getElementById("saved-articles").querySelector("[data-title='"+ title +"']");
+    var extract = document.getElementById("articles").querySelector("[data-title='"+ title +"']");
+    extract.dataset.saved = "false";
+    extract.querySelector(".remove-extract").classList.add("d-none");
+    extract.querySelector(".save-extract").classList.remove("d-none");
+    event.target.classList.add("d-none");
+    event.target.previousElementSibling.classList.remove("d-none");
+    document.getElementById("saved-articles").removeChild(article.parentNode);
+    saveToStorage();
+  } else {
+    //loadModalContents(event.target.parentNode);
+    if(event.target.parentNode.dataset.saved === "true"){
+      document.getElementById("remove-article").classList.remove("d-none");
+      document.getElementById("save-article").classList.add("d-none");
+    } else {
+      document.getElementById("save-article").classList.remove("d-none");
+      document.getElementById("remove-article").classList.add("d-none");
+    }
+    $("#myModal").modal();
+    //this is not working: Modal stays in the same position and does not scroll
   }
-  console.log(event.target)
 });
 
 //make links open in new window
