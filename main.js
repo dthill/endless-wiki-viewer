@@ -98,9 +98,9 @@ function retrieveFromStorage(){
 // load modal modal content
 function loadModalContents(articleAnchor){
 $.get(articleAnchor.getAttribute("href"), function(receivedData){
-    //document.getElementById("article-content").innerHTML = receivedData;
+    document.getElementById("article-content").innerHTML = receivedData;
     //document.getElementById("article-content").dataset.title = articleAnchor.dataset.title;
-    //document.getElementById("article-title").innerHTML = articleAnchor.dataset.title;
+    document.getElementById("article-title").innerHTML = articleAnchor.dataset.title;
   });
 }
 
