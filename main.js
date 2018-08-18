@@ -101,14 +101,15 @@ function loadModalContents(articleAnchor){
 $.get(articleAnchor.getAttribute("href"), function(receivedData){
     var articleContent = document.getElementById("article-content");
     articleContent.contentDocument.write(receivedData);
-    // articleContent.contentDocument.addEventListener("click", function(event){
-    //   if(event.target.getAttribute("href")){
-    //     event.preventDefault();
-    //     window.open(event.target.getAttribute("href"), "_blank");
-    //   } else if(event.target.parentNode.getAttribute("href")){
-    //     window.open(event.target.parentNode.getAttribute("href"), "_blank");
-    //   }
-    // });
+    articleContent.contentDocument.addEventListener("click", function(event){
+      if(event.target.getAttribute("href")){
+        event.preventDefault();
+        console.log(event.target.getAttribute("href"))
+        window.open(event.target.getAttribute("href"), "_blank");
+      } else if(event.target.parentNode.getAttribute("href")){
+        window.open(event.target.parentNode.getAttribute("href"), "_blank");
+      }
+    });
     articleContent.contentDocument.addEventListener("keydown", function(event){
       event.preventDefault();
       if(event.keyCode === 27 || event.keyCode === 8){
