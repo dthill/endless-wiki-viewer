@@ -105,6 +105,7 @@ $.get(articleAnchor.getAttribute("href"), function(receivedData){
       event.preventDefault();
       if($(event.target).closest('a').length){
         var url = $(event.target).closest('a').attr("href").replace(/^\./ , WIKI_URL +"/wiki");
+        console.log(url)
         window.open(event.target.getAttribute("href"), "_blank");
       }
     });
