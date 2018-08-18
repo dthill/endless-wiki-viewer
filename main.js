@@ -98,9 +98,9 @@ function retrieveFromStorage(){
 // load modal modal content
 function loadModalContents(articleAnchor){
 $.get(articleAnchor.getAttribute("href"), function(receivedData){
-    document.getElementById("article-content").innerHTML = receivedData;
-    document.getElementById("article-content").dataset.title = articleAnchor.dataset.title;
-    document.getElementById("article-title").innerHTML = articleAnchor.dataset.title;
+    //document.getElementById("article-content").innerHTML = receivedData;
+    //document.getElementById("article-content").dataset.title = articleAnchor.dataset.title;
+    //document.getElementById("article-title").innerHTML = articleAnchor.dataset.title;
   });
 }
 
@@ -162,8 +162,9 @@ document.getElementById("main-section").addEventListener("click", function(event
     event.target.previousElementSibling.classList.remove("d-none");
     document.getElementById("saved-articles").removeChild(article.parentNode);
     saveToStorage();
-  } else {
-    //loadModalContents(event.target.parentNode);
+  } else if(event.target.parentNode.tagName.toLowerCase() === "a"){
+    loadModalContents(event.target.parentNode);
+    console.log(event.target.parentNode)
     if(event.target.parentNode.dataset.saved === "true"){
       document.getElementById("remove-article").classList.remove("d-none");
       document.getElementById("save-article").classList.add("d-none");
