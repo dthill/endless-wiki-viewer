@@ -102,12 +102,10 @@ $.get(articleAnchor.getAttribute("href"), function(receivedData){
     var articleContent = document.getElementById("article-content");
     articleContent.contentDocument.write(receivedData);
     articleContent.contentDocument.addEventListener("click", function(event){
-      if(event.target.getAttribute("href")){
-        event.preventDefault();
-        console.log(event.target.getAttribute("href"))
+      event.preventDefault();
+      if($(event.target).closest('a').length){
+        var url = $(event.target).closest('a').attr("href").replace(/^\./ , WIKI_URL +"/wiki");
         window.open(event.target.getAttribute("href"), "_blank");
-      } else if(event.target.parentNode.getAttribute("href")){
-        window.open(event.target.parentNode.getAttribute("href"), "_blank");
       }
     });
     articleContent.contentDocument.addEventListener("keydown", function(event){
