@@ -3,6 +3,7 @@
 //create cards layout
 //adjust iframe height chrome hides bottom
 //buttons add on mobile position
+//problem with titles with special charaters querySelector title
 
 // var queryJSON = {
 //   "action": "query",
@@ -261,5 +262,6 @@ document.getElementById("remove-all-articles").addEventListener("click", functio
   saveToStorage();
   $(".save-extract").removeClass("d-none");
   $(".remove-extract").addClass("d-none");
+  $('[data-saved="true"]').attr("data-saved","false"); 
 });
 
