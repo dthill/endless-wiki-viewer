@@ -104,7 +104,8 @@ $.get(articleAnchor.getAttribute("href"), function(receivedData){
     articleContent.contentDocument.addEventListener("click", function(event){
       event.preventDefault();
       if($(event.target).closest('a').length){
-        var url = $(event.target).closest('a').attr("href").replace(/^\.|\// , WIKI_URL +"/wiki");
+        var url = $(event.target).closest('a').attr("href").replace(/^\./ , WIKI_URL +"/wiki");
+        url.replace(/^\//, WIKI_URL + "/")
         console.log(url)
         window.open(url, "_blank");
       }
