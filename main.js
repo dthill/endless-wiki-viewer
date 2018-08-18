@@ -26,6 +26,7 @@
 //   "gcmdir": "older",
 //   "gcmstart": "2016-01-01T12:09:31.000Z"
 // };
+console.log("hello")
 
 const WIKI_URL = "https://en.wikipedia.org";
 
@@ -139,6 +140,8 @@ $(".nav-link").on("click", function(event){
     
 });
 
+//fix this
+//
 //open modal load article content
 document.getElementById("main-section").addEventListener("click", function(event){
   event.preventDefault();
@@ -162,13 +165,7 @@ document.getElementById("main-section").addEventListener("click", function(event
     saveToStorage();
   } else {
     loadModalContents(event.target.parentNode);
-    if(event.target.parentNode.dataset.saved === "true"){
-      document.getElementById("remove-article").classList.remove("d-none");
-      document.getElementById("save-article").classList.add("d-none");
-    } else {
-      document.getElementById("save-article").classList.remove("d-none");
-      document.getElementById("remove-article").classList.add("d-none");
-    }
+    
     $("#myModal").modal();
     //this is not working: Modal stays in the same position and does not scroll
   }
