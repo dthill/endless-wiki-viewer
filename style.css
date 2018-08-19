@@ -34,9 +34,9 @@
 }
 
 #close-viewer {
-  position: sticky;
-  top: 0;
-  float: right;
+  position: fixed;
+  top: 3rem;
+  right: 11%;
   font-size: 1.5em;
   margin: 1rem;
   border-radius: 0.25rem;
