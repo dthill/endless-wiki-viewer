@@ -1,6 +1,7 @@
 
 #articles, #saved-articles {
   overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   height: 87vh;
   margin: 0;
   padding: 0;
@@ -28,7 +29,8 @@
 }
 
 #article-content {
-  overflow: scroll !important;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   height: 73vh;
   z-index: 2000;
   border: none;

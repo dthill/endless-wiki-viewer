@@ -2,9 +2,8 @@
 //adjust number of api calls
 //create cards layout
 //adjust iframe height chrome hides bottom
-//buttons add on mobile position
 //problem with titles with special charaters querySelector title
-//link to external pages not working
+//replace modal with hiding main section, and display modal container
 
 // var queryJSON = {
 //   "action": "query",
