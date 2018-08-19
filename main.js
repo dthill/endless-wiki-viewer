@@ -1,9 +1,9 @@
 //catch api errors
 //adjust number of api calls
 //create cards layout
-//adjust iframe height chrome hides bottom
+//adjust iframe height
+//adjust main-section hight
 //problem with titles with special charaters querySelector title
-//replace modal with hiding main section, and display modal container
 
 // var queryJSON = {
 //   "action": "query",
@@ -35,13 +35,13 @@ var queryJSON = {
   "prop": "extracts|pageimages",
   "generator": "random",
   "exchars": "500",
-  "exlimit": "20",
+  "exlimit": "12",
   "exintro": 1,
   "explaintext": 1,
   "pithumbsize": "100",
-  "pilimit": "20",
+  "pilimit": "12",
   "grnnamespace": "0",
-  "grnlimit": "20"
+  "grnlimit": "12"
 };
 
 var scrollPositionArticles = 0;
@@ -112,7 +112,8 @@ $.get(articleAnchor.getAttribute("href"), function(receivedData){
     articleContent.contentDocument.addEventListener("keydown", function(event){
       event.preventDefault();
       if(event.keyCode === 27 || event.keyCode === 8){
-            $("#myModal").modal("hide");
+            $("#article-viewer").collapse("hide");
+            $("#main-section").collapse("show");
       }
     });
     articleContent.contentDocument.close();
@@ -125,7 +126,15 @@ $.get(articleAnchor.getAttribute("href"), function(receivedData){
 window.addEventListener("load", function(){
   getArticles();
   retrieveFromStorage();
-})
+});
+
+window.addEventListener("keydown", function(event){
+  if(event.keyCode === 27 || event.keyCode === 8){
+    event.preventDefault();
+    $("#article-viewer").collapse("hide");
+    $("#main-section").collapse("show");
+  }
+});
 
 document.getElementById("articles").addEventListener("scroll", function(event){
   if (this.clientHeight  >= (this.scrollHeight - this.scrollTop) * 0.8 ) {
@@ -141,23 +150,20 @@ $(".nav-link").on("click", function(event){
       $(this).parent().addClass("active")
       document.getElementById("articles").classList.remove("d-none");
       document.getElementById("saved-articles").classList.add("d-none");
-      scrollPositionArticles = window.scrollY;
-      window.scrollTo(0, scrollPositionSaved);
+      $("#main-section").collapse("show");
+      $("#article-viewer").collapse("hide");
     } else if (this.innerText === "Reading List"){
-      //retrive local storage set innerHTML to local storage  
       $(this).parent().siblings().removeClass("active");
       $(this).parent().addClass("active")
       document.getElementById("saved-articles").classList.remove("d-none");
-      document.getElementById("articles").classList.add("d-none")
-      scrollPositionSaved = window.scrollY;
-      window.scrollTo(0, scrollPositionArticles);
+      document.getElementById("articles").classList.add("d-none");
+      $("#article-viewer").collapse("hide");
+      $("#main-section").collapse("show");
     }
     
 });
 
-//fix this
-//
-//open modal load article content
+
 document.getElementById("main-section").addEventListener("click", function(event){
   event.preventDefault();
   if(event.target.classList.contains("save-extract")){
@@ -187,12 +193,16 @@ document.getElementById("main-section").addEventListener("click", function(event
       document.getElementById("save-article").classList.remove("d-none");
       document.getElementById("remove-article").classList.add("d-none");
     }
-    $("#myModal").modal();
+    $("#main-section").collapse("hide");
+    $("#article-viewer").collapse("show");
   }
 });
 
-//make links open in new window
-
+//close button
+document.getElementById("close-viewer").addEventListener("click", function(event){
+  $("#article-viewer").collapse("hide");
+  $("#main-section").collapse("show");
+})
 
 //previouse button
 document.getElementsByClassName("previous-button")[0].addEventListener("click", function(event){
@@ -230,7 +240,6 @@ document.getElementsByClassName("next-button")[0].addEventListener("click", func
     }
   }
 });
-
 
 document.getElementById("save-article").addEventListener("click", function(event){
   var title = document.getElementById("article-content").dataset.arttitle;

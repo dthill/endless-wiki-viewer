@@ -12,64 +12,47 @@
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-		  	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-		    	<span class="navbar-toggler-icon"></span>
-		  	</button>
-		  	<a class="navbar-brand" href="#">Wiki Viewer</a>
-		 		<div class="collapse navbar-collapse" id="navbarToggler">
-		    	<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-		      		<li class="nav-item active">
-		        		<a class="nav-link" href="#">Random Articles</a>
-		      		</li>
-		      		<li class="nav-item">
-		        		<a class="nav-link" href="#">Reading List</a>
-		      		</li>
-		    	</ul>
-		    	<button id="remove-all-articles" type="button" class="btn">Clear Reading List</button>
-		  	</div>
-		</nav>
-
-	<!-- The Modal Container-->
-	<div class="container">
-	  <!-- The Modal -->
-	  	<div class="modal fade" id="myModal" tabindex="-1">
-	    	<div class="modal-dialog">
-	      		<div class="modal-content">
-	        <!-- Modal Header -->
-			        <div class="modal-header pb-0">
-			        	<div class="container">
-			        		<button id="save-article" type="button" class="btn">Add to Reading List</button>
-			        		<button id="remove-article" type="button" class="btn btn-dark d-none">Remove from Reading List</button>
-			          	<h2 id="article-title" class="modal-title text-center"></h2> 	
-			         	</div>
-			         	<button type="button" class="close" data-dismiss="modal">&times;</button>
-			        </div>
-	        <!-- Modal body -->
-	        		<div class="modal-body">
-	        			<span class="previous-button">&#8249;</span>
-						<span class="next-button">&#8250;</span>
-						<iframe id="article-content" class="container-fluid"></iframe>
-	        		</div>
-	        <!-- Modal footer -->
-	        		<div class="modal-footer">
-	        		</div>
-	      		</div>
-	    	</div>
-	  	</div>
-	</div>
-
+	  	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+	    	<span class="navbar-toggler-icon"></span>
+	  	</button>
+	  	<a class="navbar-brand" href="#">Wiki Viewer</a>
+ 		<div class="collapse navbar-collapse" id="navbarToggler">
+    	<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      		<li class="nav-item active">
+        		<a class="nav-link" href="#">Random Articles</a>
+      		</li>
+      		<li class="nav-item">
+        		<a class="nav-link" href="#">Reading List</a>
+      		</li>
+    	</ul>
+    	<button id="remove-all-articles" type="button" class="btn">Clear Reading List</button>
+  		</div>
+	</nav>
 	
-
-
-	<div id="main-section" class="container mt-2">
+	<div id="main-section" class="container pt-2 collapse show multi-collapse">
 		<div id="articles">	
 		</div>
-
+		<h2>Loading...</h2>
 		<div id="saved-articles" class="d-none">	
 		</div>
 	</div>
 
-	
+	<div id="article-viewer" class="collapse multi-collapse bg-secondary">
+		<div class="container">
+			<div class="viewer-header bg-light p-2">
+	    		<button id="save-article" type="button" class="btn">Add to Reading List</button>
+	    		<button id="remove-article" type="button" class="btn btn-dark d-none">Remove from Reading List</button>
+	    		<button id="close-viewer" type="button" class="btn">&#8964;</button>
+	      		<h2 id="article-title" class="modal-title text-center"></h2>
+	      		
+			</div>
+			<div class="viewer-body bg-light">
+				<iframe id="article-content" class="container-fluid"></iframe>
+			</div>
+			<span class="previous-button">&#8249;</span>
+			<span class="next-button">&#8250;</span>
+		</div>
+	</div>
 
 	<script id="featuredArticleTemp" type="text/x-template">
 		<div class="featuredArticle">
