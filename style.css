@@ -34,9 +34,9 @@
 }
 
 #close-viewer {
-  position: fixed;
-  top: 3rem;
-  right: 11%;
+  position: absolute;
+  top: 0;
+  right: 0;
   font-size: 1.5em;
   margin: 1rem;
   border-radius: 0.25rem;
@@ -50,7 +50,7 @@
 }
 
 .previous-button, .next-button {
-  position: absolute;
+  position: fixed;
   top: 50%;
   padding: 0.4rem;
   text-align: center;

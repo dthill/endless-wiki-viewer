@@ -5,6 +5,7 @@
 //adjust main-section hight
 //problem with titles with special charaters querySelector title
 //add loaing icon
+//fix mobile close button and header position
 
 // var queryJSON = {
 //   "action": "query",
@@ -76,7 +77,7 @@ function getArticles(){
         var thumb = "";
       }
       var dataObj = {
-        url: "https://en.wikipedia.org/api/rest_v1/page/mobile-html/" + receivedData.query.pages[articleData]["title"],
+        url: "https://en.wikipedia.org/api/rest_v1/page/html/" + receivedData.query.pages[articleData]["title"],
         title: receivedData.query.pages[articleData]["title"],
         extract: receivedData.query.pages[articleData]["extract"],
         thumbnailSource: thumb
