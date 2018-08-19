@@ -28,7 +28,7 @@
 }
 
 #article-content {
-  overflow: auto;
+  overflow: scroll !important;
   height: 73vh;
   z-index: 2000;
   border: none;
