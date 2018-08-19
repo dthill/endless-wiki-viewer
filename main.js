@@ -4,6 +4,7 @@
 //adjust iframe height
 //adjust main-section hight
 //problem with titles with special charaters querySelector title
+//add loaing icon
 
 // var queryJSON = {
 //   "action": "query",
