@@ -34,7 +34,6 @@
 
 #article-viewer {
   position: relative;
-  height: calc(100vh - 3.5rem);
 }
 
 #close-viewer {
