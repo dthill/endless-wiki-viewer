@@ -23,6 +23,8 @@
 }
 
 #article-content {
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   height: 100%;
   z-index: 2000;
   border: none;
