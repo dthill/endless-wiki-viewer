@@ -34,7 +34,8 @@
 }
 
 #close-viewer {
-  position: absolute;
+  position: sticky;
+  float: right;
   top: 0;
   right: 0;
   font-size: 1.5em;
@@ -43,6 +44,7 @@
   cursor: pointer;
   background-color: lightgray;
   font-weight: bolder;
+  z-index: 2000;
 }
 
 .viewer-header {
