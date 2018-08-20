@@ -43,8 +43,11 @@ var queryJSON = {
   "grnlimit": "12"
 };
 
-var scrollPositionArticles = 0;
-var scrollPositionSaved = 0;
+var randomArticles = document.getElementById("articles");
+var savedArticles = document.getElementById("saved-articles");
+var articleTitle = document.getElementById("article-title");
+var viewerBody = document.getElementsByClassName("viewer-body")[0];
+var articleContent;
 
 
 function toTemplate(htmlTemplate, dataObject){
@@ -79,25 +82,26 @@ function getArticles(){
         extract: receivedData.query.pages[articleData]["extract"],
         thumbnailSource: thumb
       };
-      document.getElementById("articles").insertAdjacentHTML("beforeend", toTemplate(document.getElementById("featuredArticleTemp"), dataObj));
+      randomArticles.insertAdjacentHTML("beforeend", toTemplate(document.getElementById("featuredArticleTemp"), dataObj));
     });
   });
 }
 
 function saveToStorage(){
-  localStorage.setItem("readingList", document.getElementById("saved-articles").innerHTML);
+  localStorage.setItem("readingList", savedArticles.innerHTML);
 }
 
 function retrieveFromStorage(){
   if(localStorage.getItem("readingList")){
-    document.getElementById("saved-articles").innerHTML = localStorage.getItem("readingList");
+    savedArticles.innerHTML = localStorage.getItem("readingList");
   }
 }
 
 // load modal modal content
 function loadModalContents(articleAnchor){
 $.get(articleAnchor.getAttribute("href"), function(receivedData){
-    var articleContent = document.getElementById("article-content");
+    viewerBody.innerHTML = '<iframe id="article-content" class="container-fluid clearfix"></iframe>';
+    articleContent = viewerBody.children[0];
     articleContent.contentDocument.write(receivedData);
     articleContent.contentDocument.addEventListener("click", function(event){
       event.preventDefault();
@@ -117,7 +121,7 @@ $.get(articleAnchor.getAttribute("href"), function(receivedData){
     });
     articleContent.contentDocument.close();
     articleContent.dataset.arttitle = articleAnchor.dataset.title;
-    document.getElementById("article-title").innerHTML = articleAnchor.dataset.title;
+    articleTitle.innerHTML = articleAnchor.dataset.title;
   });
 }
 
@@ -142,7 +146,7 @@ document.getElementById("article-viewer").addEventListener("click", function(eve
   }
 });
 
-document.getElementById("articles").addEventListener("scroll", function(event){
+randomArticles.addEventListener("scroll", function(event){
   if (this.clientHeight  >= (this.scrollHeight - this.scrollTop) * 0.8 ) {
       getArticles();
     }
@@ -154,15 +158,15 @@ $(".nav-link").on("click", function(event){
     if (this.innerText === "Random Articles"){
       $(this).parent().siblings().removeClass("active");
       $(this).parent().addClass("active")
-      document.getElementById("articles").classList.remove("d-none");
-      document.getElementById("saved-articles").classList.add("d-none");
+      randomArticles.classList.remove("d-none");
+      savedArticles.classList.add("d-none");
       $("#main-section").collapse("show");
       $("#article-viewer").collapse("hide");
     } else if (this.innerText === "Reading List"){
       $(this).parent().siblings().removeClass("active");
       $(this).parent().addClass("active")
-      document.getElementById("saved-articles").classList.remove("d-none");
-      document.getElementById("articles").classList.add("d-none");
+      savedArticles.classList.remove("d-none");
+      randomArticles.classList.add("d-none");
       $("#article-viewer").collapse("hide");
       $("#main-section").collapse("show");
     }
@@ -176,19 +180,19 @@ document.getElementById("main-section").addEventListener("click", function(event
     event.target.parentNode.dataset.saved = "true";
     event.target.classList.add("d-none");
     event.target.nextElementSibling.classList.remove("d-none");
-    document.getElementById("saved-articles").appendChild(event.target.parentNode.parentNode.cloneNode(true));
+    savedArticles.appendChild(event.target.parentNode.parentNode.cloneNode(true));
     saveToStorage();
   } else if(event.target.classList.contains("remove-extract")){
     event.target.parentNode.dataset.saved = "false";
     var title = event.target.parentNode.dataset.title;
-    var article = document.getElementById("saved-articles").querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
-    var extract = document.getElementById("articles").querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
+    var article = savedArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
+    var extract = randomArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
     extract.dataset.saved = "false";
     extract.querySelector(".remove-extract").classList.add("d-none");
     extract.querySelector(".save-extract").classList.remove("d-none");
     event.target.classList.add("d-none");
     event.target.previousElementSibling.classList.remove("d-none");
-    document.getElementById("saved-articles").removeChild(article.parentNode);
+    savedArticles.removeChild(article.parentNode);
     saveToStorage();
   } else if(event.target.parentNode.tagName.toLowerCase() === "a"){
     loadModalContents(event.target.parentNode);
@@ -212,12 +216,12 @@ document.getElementById("close-viewer").addEventListener("click", function(event
 
 //previouse button
 document.getElementsByClassName("previous-button")[0].addEventListener("click", function(event){
-  var title = document.getElementById("article-content").dataset.arttitle;
+  var title = articleContent.dataset.arttitle;
   if(document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.previousElementSibling){
     var previousArticle = document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.previousElementSibling.children[0];
     loadModalContents(previousArticle);
-    document.getElementById("article-content").scrollTop = 0;
-    document.getElementById("article-content").scrollLeft = 0;
+    articleContent.scrollTop = 0;
+    articleContent.scrollLeft = 0;
     if(previousArticle.dataset.saved === "true"){
       document.getElementById("save-article").classList.add("d-none");
       document.getElementById("remove-article").classList.remove("d-none");
@@ -231,12 +235,12 @@ document.getElementsByClassName("previous-button")[0].addEventListener("click", 
 
 //next button
 document.getElementsByClassName("next-button")[0].addEventListener("click", function(event){
-  var title = document.getElementById("article-content").dataset.arttitle;
+  var title = articleContent.dataset.arttitle;
   if(document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling){
     var nextArticle = document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling.children[0];
     loadModalContents(nextArticle);
-    document.getElementById("article-content").scrollTop = 0;
-    document.getElementById("article-content").scrollLeft = 0;
+    articleContent.scrollTop = 0;
+    articleContent.scrollLeft = 0;
     if(nextArticle.dataset.saved === "true"){
       document.getElementById("save-article").classList.add("d-none");
       document.getElementById("remove-article").classList.remove("d-none");
@@ -248,25 +252,25 @@ document.getElementsByClassName("next-button")[0].addEventListener("click", func
 });
 
 document.getElementById("save-article").addEventListener("click", function(event){
-  var title = document.getElementById("article-content").dataset.arttitle;
+  var title = articleContent.dataset.arttitle;
   var article = document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
   article.dataset.saved = "true";
   this.classList.add("d-none");
   article.querySelector(".save-extract").classList.add("d-none");
   article.querySelector(".remove-extract").classList.remove("d-none");
-  document.getElementById("saved-articles").appendChild(article.parentNode.cloneNode(true));
+  savedArticles.appendChild(article.parentNode.cloneNode(true));
   document.getElementById("remove-article").classList.remove("d-none");
   saveToStorage();
 });
 
 document.getElementById("remove-article").addEventListener("click", function(event){
-  var title = document.getElementById("article-content").dataset.arttitle;
-  var article = document.getElementById("saved-articles").querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
-  var extract = document.getElementById("articles").querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
+  var title = articleContent.dataset.arttitle;
+  var article = savedArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
+  var extract = randomArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
   extract.querySelector(".remove-extract").classList.add("d-none");
   extract.querySelector(".save-extract").classList.remove("d-none");
   extract.dataset.saved = "false";
-  document.getElementById("saved-articles").removeChild(article.parentNode);
+  savedArticles.removeChild(article.parentNode);
   this.classList.add("d-none");
   document.getElementById("save-article").classList.remove("d-none");
   saveToStorage();
@@ -274,7 +278,7 @@ document.getElementById("remove-article").addEventListener("click", function(eve
 
 
 document.getElementById("remove-all-articles").addEventListener("click", function(event){
-  document.getElementById("saved-articles").innerHTML = "";
+  savedArticles.innerHTML = "";
   saveToStorage();
   $(".save-extract").removeClass("d-none");
   $(".remove-extract").addClass("d-none");
