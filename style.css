@@ -12,7 +12,10 @@
   float: left;
   clear: left;
   margin-right: 1rem;
+  margin-top: 1rem;
 }
+
+
 
 #articles a, #saved-articles a {
   text-decoration: none;

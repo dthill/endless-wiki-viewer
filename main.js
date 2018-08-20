@@ -3,9 +3,7 @@
 //create cards layout
 //adjust iframe height
 //adjust main-section hight
-//problem with titles with special charaters querySelector title
 //add loaing icon
-//fix mobile close button and header position
 
 // var queryJSON = {
 //   "action": "query",
@@ -177,8 +175,8 @@ document.getElementById("main-section").addEventListener("click", function(event
   } else if(event.target.classList.contains("remove-extract")){
     event.target.parentNode.dataset.saved = "false";
     var title = event.target.parentNode.dataset.title;
-    var article = document.getElementById("saved-articles").querySelector("[data-title='"+ title +"']");
-    var extract = document.getElementById("articles").querySelector("[data-title='"+ title +"']");
+    var article = document.getElementById("saved-articles").querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
+    var extract = document.getElementById("articles").querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
     extract.dataset.saved = "false";
     extract.querySelector(".remove-extract").classList.add("d-none");
     extract.querySelector(".save-extract").classList.remove("d-none");
@@ -209,8 +207,8 @@ document.getElementById("close-viewer").addEventListener("click", function(event
 //previouse button
 document.getElementsByClassName("previous-button")[0].addEventListener("click", function(event){
   var title = document.getElementById("article-content").dataset.arttitle;
-  if(document.querySelector("[data-title='"+ title +"']").parentNode.previousElementSibling){
-    var previousArticle = document.querySelector("[data-title='"+ title +"']").parentNode.previousElementSibling.children[0];
+  if(document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.previousElementSibling){
+    var previousArticle = document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.previousElementSibling.children[0];
     loadModalContents(previousArticle);
     document.getElementById("article-content").scrollTop = 0;
     document.getElementById("article-content").scrollLeft = 0;
@@ -228,8 +226,8 @@ document.getElementsByClassName("previous-button")[0].addEventListener("click", 
 //next button
 document.getElementsByClassName("next-button")[0].addEventListener("click", function(event){
   var title = document.getElementById("article-content").dataset.arttitle;
-  if(document.querySelector("[data-title='"+ title +"']").parentNode.nextElementSibling){
-    var nextArticle = document.querySelector("[data-title='"+ title +"']").parentNode.nextElementSibling.children[0];
+  if(document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling){
+    var nextArticle = document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling.children[0];
     loadModalContents(nextArticle);
     document.getElementById("article-content").scrollTop = 0;
     document.getElementById("article-content").scrollLeft = 0;
@@ -245,7 +243,7 @@ document.getElementsByClassName("next-button")[0].addEventListener("click", func
 
 document.getElementById("save-article").addEventListener("click", function(event){
   var title = document.getElementById("article-content").dataset.arttitle;
-  var article = document.querySelector("[data-title='"+ title +"']");
+  var article = document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
   article.dataset.saved = "true";
   this.classList.add("d-none");
   article.querySelector(".save-extract").classList.add("d-none");
@@ -257,8 +255,8 @@ document.getElementById("save-article").addEventListener("click", function(event
 
 document.getElementById("remove-article").addEventListener("click", function(event){
   var title = document.getElementById("article-content").dataset.arttitle;
-  var article = document.getElementById("saved-articles").querySelector("[data-title='"+ title +"']");
-  var extract = document.getElementById("articles").querySelector("[data-title='"+ title +"']");
+  var article = document.getElementById("saved-articles").querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
+  var extract = document.getElementById("articles").querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
   extract.querySelector(".remove-extract").classList.add("d-none");
   extract.querySelector(".save-extract").classList.remove("d-none");
   extract.dataset.saved = "false";
