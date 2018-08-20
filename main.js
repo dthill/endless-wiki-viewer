@@ -1,7 +1,6 @@
 //catch api errors
 //adjust number of api calls
 //create cards layout
-//adjust iframe height
 //add loaing icon
 
 // var queryJSON = {
@@ -48,6 +47,9 @@ var savedArticles = document.getElementById("saved-articles");
 var articleTitle = document.getElementById("article-title");
 var viewerBody = document.getElementsByClassName("viewer-body")[0];
 var articleContent;
+var saveArticle = document.getElementById("save-article");
+var removeArticle = document.getElementById("remove-article");
+var closeViewer = document.getElementById("close-viewer");
 
 
 function toTemplate(htmlTemplate, dataObject){
@@ -170,10 +172,10 @@ $(".nav-link").on("click", function(event){
       $("#article-viewer").collapse("hide");
       $("#main-section").collapse("show");
     }
-    
+    $('.navbar-toggler').click();
 });
 
-
+//all clicks on main section including: opening viewer, save extract button and remove extract button
 document.getElementById("main-section").addEventListener("click", function(event){
   event.preventDefault();
   if(event.target.classList.contains("save-extract")){
@@ -197,11 +199,11 @@ document.getElementById("main-section").addEventListener("click", function(event
   } else if(event.target.parentNode.tagName.toLowerCase() === "a"){
     loadModalContents(event.target.parentNode);
     if(event.target.parentNode.dataset.saved === "true"){
-      document.getElementById("remove-article").classList.remove("d-none");
-      document.getElementById("save-article").classList.add("d-none");
+      removeArticle.classList.remove("d-none");
+      saveArticle.classList.add("d-none");
     } else {
-      document.getElementById("save-article").classList.remove("d-none");
-      document.getElementById("remove-article").classList.add("d-none");
+      saveArticle.classList.remove("d-none");
+      removeArticle.classList.add("d-none");
     }
     $("#main-section").collapse("hide");
     $("#article-viewer").collapse("show");
@@ -209,7 +211,7 @@ document.getElementById("main-section").addEventListener("click", function(event
 });
 
 //close button
-document.getElementById("close-viewer").addEventListener("click", function(event){
+closeViewer.addEventListener("click", function(event){
   $("#article-viewer").collapse("hide");
   $("#main-section").collapse("show");
 })
@@ -223,11 +225,11 @@ document.getElementsByClassName("previous-button")[0].addEventListener("click", 
     articleContent.scrollTop = 0;
     articleContent.scrollLeft = 0;
     if(previousArticle.dataset.saved === "true"){
-      document.getElementById("save-article").classList.add("d-none");
-      document.getElementById("remove-article").classList.remove("d-none");
+      saveArticle.classList.add("d-none");
+      removeArticle.classList.remove("d-none");
     } else {
-      document.getElementById("remove-article").classList.add("d-none");
-      document.getElementById("save-article").classList.remove("d-none");
+      removeArticle.classList.add("d-none");
+      saveArticle.classList.remove("d-none");
     }
   }
 });
@@ -242,28 +244,30 @@ document.getElementsByClassName("next-button")[0].addEventListener("click", func
     articleContent.scrollTop = 0;
     articleContent.scrollLeft = 0;
     if(nextArticle.dataset.saved === "true"){
-      document.getElementById("save-article").classList.add("d-none");
-      document.getElementById("remove-article").classList.remove("d-none");
+      saveArticle.classList.add("d-none");
+      removeArticle.classList.remove("d-none");
     } else {
-      document.getElementById("remove-article").classList.add("d-none");
-      document.getElementById("save-article").classList.remove("d-none");
+      removeArticle.classList.add("d-none");
+      saveArticle.classList.remove("d-none");
     }
   }
 });
 
-document.getElementById("save-article").addEventListener("click", function(event){
+//save button in viewer
+saveArticle.addEventListener("click", function(event){
   var title = articleContent.dataset.arttitle;
-  var article = document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
-  article.dataset.saved = "true";
+  var extract = document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
+  extract.dataset.saved = "true";
   this.classList.add("d-none");
-  article.querySelector(".save-extract").classList.add("d-none");
-  article.querySelector(".remove-extract").classList.remove("d-none");
-  savedArticles.appendChild(article.parentNode.cloneNode(true));
-  document.getElementById("remove-article").classList.remove("d-none");
+  extract.querySelector(".save-extract").classList.add("d-none");
+  extract.querySelector(".remove-extract").classList.remove("d-none");
+  savedArticles.appendChild(extract.parentNode.cloneNode(true));
+  removeArticle.classList.remove("d-none");
   saveToStorage();
 });
 
-document.getElementById("remove-article").addEventListener("click", function(event){
+//remove button in viewer
+removeArticle.addEventListener("click", function(event){
   var title = articleContent.dataset.arttitle;
   var article = savedArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
   var extract = randomArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
@@ -272,16 +276,17 @@ document.getElementById("remove-article").addEventListener("click", function(eve
   extract.dataset.saved = "false";
   savedArticles.removeChild(article.parentNode);
   this.classList.add("d-none");
-  document.getElementById("save-article").classList.remove("d-none");
+  saveArticle.classList.remove("d-none");
   saveToStorage();
 });
 
-
+// remove all button
 document.getElementById("remove-all-articles").addEventListener("click", function(event){
   savedArticles.innerHTML = "";
   saveToStorage();
   $(".save-extract").removeClass("d-none");
   $(".remove-extract").addClass("d-none");
-  $('[data-saved="true"]').attr("data-saved","false"); 
+  $('[data-saved="true"]').attr("data-saved","false");
+  $('.navbar-toggler').click();
 });
 
