@@ -2,7 +2,6 @@
 //adjust number of api calls
 //create cards layout
 //adjust iframe height
-//adjust main-section hight
 //add loaing icon
 
 // var queryJSON = {

@@ -2,7 +2,7 @@
 #articles, #saved-articles {
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
-  height: 87vh;
+  height: calc(100vh - 4rem);
   margin: 0;
   padding: 0;
 }
@@ -23,9 +23,7 @@
 }
 
 #article-content {
-  overflow: scroll;
-  -webkit-overflow-scrolling: touch;
-  height: 78vh;
+  height: 100%;
   z-index: 2000;
   border: none;
   margin: 0;
@@ -34,6 +32,7 @@
 
 #article-viewer {
   position: relative;
+  height: calc(100vh - 3.5rem);
 }
 
 #close-viewer {
@@ -52,6 +51,10 @@
   height: 2em;
   text-align: center;
   opacity: 0.7;
+}
+
+.viewer-body {
+  height: calc(100vh - 9.9rem);
 }
 
 .viewer-header {
