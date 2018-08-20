@@ -38,7 +38,7 @@ var queryJSON = {
   "exlimit": "12",
   "exintro": 1,
   "explaintext": 1,
-  "pithumbsize": "100",
+  "pithumbsize": "250",
   "pilimit": "12",
   "grnnamespace": "0",
   "grnlimit": "12"
