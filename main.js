@@ -136,6 +136,13 @@ window.addEventListener("keydown", function(event){
   }
 });
 
+document.getElementById("article-viewer").addEventListener("click", function(event){
+  if(event.target === this){
+    $("#article-viewer").collapse("hide");
+    $("#main-section").collapse("show");
+  }
+});
+
 document.getElementById("articles").addEventListener("scroll", function(event){
   if (this.clientHeight  >= (this.scrollHeight - this.scrollTop) * 0.8 ) {
       getArticles();
