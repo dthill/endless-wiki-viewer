@@ -34,6 +34,7 @@
 }
 
 #close-viewer {
+  position: sticky;
   float: right;
   top: 0;
   right: 0;
