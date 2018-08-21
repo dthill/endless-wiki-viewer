@@ -126,7 +126,7 @@ $.get(articleAnchor.getAttribute("href"), function(receivedData){
     articleContent.dataset.arttitle = articleAnchor.dataset.title;
     articleTitle.innerHTML = articleAnchor.dataset.title;
     console.log("Tables:");
-    console.log(document.getElementsByClassName("wikitable"));
+    console.log(articleContent.contentDocument.getElementsByClassName("wikitable"));
   });
 }
 
