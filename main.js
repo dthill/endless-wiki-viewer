@@ -2,6 +2,7 @@
 //adjust number of api calls
 //create cards layout
 //add loaing icon
+//iFrame overflow on the side
 
 // var queryJSON = {
 //   "action": "query",
@@ -42,14 +43,14 @@ var queryJSON = {
   "grnlimit": "12"
 };
 
-var randomArticles = document.getElementById("articles");
-var savedArticles = document.getElementById("saved-articles");
-var articleTitle = document.getElementById("article-title");
-var viewerBody = document.getElementsByClassName("viewer-body")[0];
+const randomArticles = document.getElementById("articles");
+const savedArticles = document.getElementById("saved-articles");
+const articleTitle = document.getElementById("article-title");
+const viewerBody = document.getElementsByClassName("viewer-body")[0];
 var articleContent;
-var saveArticle = document.getElementById("save-article");
-var removeArticle = document.getElementById("remove-article");
-var closeViewer = document.getElementById("close-viewer");
+const saveArticle = document.getElementById("save-article");
+const removeArticle = document.getElementById("remove-article");
+const closeViewer = document.getElementById("close-viewer");
 
 
 function toTemplate(htmlTemplate, dataObject){
@@ -102,7 +103,7 @@ function retrieveFromStorage(){
 // load modal modal content
 function loadModalContents(articleAnchor){
 $.get(articleAnchor.getAttribute("href"), function(receivedData){
-    viewerBody.innerHTML = '<iframe id="article-content" class="container-fluid clearfix"></iframe>';
+    viewerBody.innerHTML = '<iframe id="article-content"></iframe>';
     articleContent = viewerBody.children[0];
     articleContent.contentDocument.write(receivedData);
     articleContent.contentDocument.addEventListener("click", function(event){

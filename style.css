@@ -23,13 +23,15 @@
 }
 
 #article-content {
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   height: calc(100vh - 9.9rem);
   z-index: 2000;
   border: none;
   margin: 0;
   padding: 1em;
+  width: 100%;
 }
 
 #article-viewer, .viewer-header {
