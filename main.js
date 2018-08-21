@@ -125,6 +125,7 @@ $.get(articleAnchor.getAttribute("href"), function(receivedData){
     articleContent.contentDocument.close();
     articleContent.dataset.arttitle = articleAnchor.dataset.title;
     articleTitle.innerHTML = articleAnchor.dataset.title;
+    console.log(document.getElementsByClassName("wikitable"));
   });
 }
 
