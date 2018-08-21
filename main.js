@@ -3,6 +3,7 @@
 //create cards layout
 //add loaing icon
 //iFrame overflow on the side
+//fix save and reload articles: Extract is null
 
 // var queryJSON = {
 //   "action": "query",
@@ -192,10 +193,13 @@ document.getElementById("main-section").addEventListener("click", function(event
     event.target.parentNode.dataset.saved = "false";
     var title = event.target.parentNode.dataset.title;
     var article = savedArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
-    var extract = randomArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
-    extract.dataset.saved = "false";
-    extract.querySelector(".remove-extract").classList.add("d-none");
-    extract.querySelector(".save-extract").classList.remove("d-none");
+        //error here first check if it exists before using it
+    if(randomArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']")){
+      var extract = randomArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
+      extract.dataset.saved = "false";
+      extract.querySelector(".remove-extract").classList.add("d-none");
+      extract.querySelector(".save-extract").classList.remove("d-none");
+    }
     event.target.classList.add("d-none");
     event.target.previousElementSibling.classList.remove("d-none");
     savedArticles.removeChild(article.parentNode);
@@ -274,14 +278,19 @@ saveArticle.addEventListener("click", function(event){
 removeArticle.addEventListener("click", function(event){
   var title = articleContent.dataset.arttitle;
   var article = savedArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
-  var extract = randomArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
-  extract.querySelector(".remove-extract").classList.add("d-none");
-  extract.querySelector(".save-extract").classList.remove("d-none");
-  extract.dataset.saved = "false";
+    //error here fix this and close modal on click
+  if(randomArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']")){
+    var extract = randomArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
+    extract.querySelector(".remove-extract").classList.add("d-none");
+    extract.querySelector(".save-extract").classList.remove("d-none");
+    extract.dataset.saved = "false";
+  }
   savedArticles.removeChild(article.parentNode);
-  this.classList.add("d-none");
   saveArticle.classList.remove("d-none");
   saveToStorage();
+  $("#article-viewer").collapse("hide");
+  $("#main-section").collapse("show");
+  this.classList.add("d-none");
 });
 
 // remove all button
