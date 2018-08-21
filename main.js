@@ -181,6 +181,7 @@ $(".nav-link").on("click", function(event){
 
 //all clicks on main section including: opening viewer, save extract button and remove extract button
 document.getElementById("main-section").addEventListener("click", function(event){
+  event.preventDefault();
   if(event.target.classList.contains("save-extract")){
     event.target.parentNode.dataset.saved = "true";
     event.target.classList.add("d-none");
@@ -200,7 +201,6 @@ document.getElementById("main-section").addEventListener("click", function(event
     savedArticles.removeChild(article.parentNode);
     saveToStorage();
   } else if(event.target.parentNode.tagName.toLowerCase() === "a"){
-    event.preventDefault();
     loadModalContents(event.target.parentNode);
     if(event.target.parentNode.dataset.saved === "true"){
       removeArticle.classList.remove("d-none");
