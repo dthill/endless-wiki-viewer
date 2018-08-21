@@ -125,8 +125,10 @@ $.get(articleAnchor.getAttribute("href"), function(receivedData){
     articleContent.contentDocument.close();
     articleContent.dataset.arttitle = articleAnchor.dataset.title;
     articleTitle.innerHTML = articleAnchor.dataset.title;
-    console.log("Tables:");
-    console.log(articleContent.contentDocument.getElementsByClassName("wikitable"));
+    articleContent.contentDocument.getElementsByClassName("wikitable").forEach(function(table){
+      table.style.maxWidth = "90vw";
+      table.style.overflowX = "scroll"; 
+    });
   });
 }
 
