@@ -125,7 +125,7 @@ $.get(articleAnchor.getAttribute("href"), function(receivedData){
     articleContent.contentDocument.close();
     articleContent.dataset.arttitle = articleAnchor.dataset.title;
     articleTitle.innerHTML = articleAnchor.dataset.title;
-    Array.from(articleContent.contentDocument.getElementsByTagName("table")).forEach(function(table){
+    Array.from(articleContent.contentDocument.getElementsByTagName("section")).forEach(function(table){
       table.style.maxWidth = "90vw !important";
       table.style.overflowX = "scroll !important";
       table.style.WebkitOverflowScrolling = "touch";
