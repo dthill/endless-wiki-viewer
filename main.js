@@ -127,7 +127,8 @@ $.get(articleAnchor.getAttribute("href"), function(receivedData){
     articleTitle.innerHTML = articleAnchor.dataset.title;
     Array.from(articleContent.contentDocument.getElementsByTagName("table")).forEach(function(table){
       table.style.maxWidth = "90vw !important";
-      table.style.overflowX = "scroll !important"; 
+      table.style.overflowX = "scroll !important";
+      table.style.WebkitOverflowScrolling = "touch";
     });
   });
 }
