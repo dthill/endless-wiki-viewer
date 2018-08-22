@@ -126,11 +126,11 @@ $.get(articleAnchor.getAttribute("href"), function(receivedData){
     articleContent.dataset.arttitle = articleAnchor.dataset.title;
     articleTitle.innerHTML = articleAnchor.dataset.title;
     Array.from(articleContent.contentDocument.getElementsByClassName("wikitable")).forEach(function(table){
-      table.style.maxWidth = "90vw !important";
+      table.style.width = "90vw !important";
       table.style.overflowX = "scroll !important"; 
     });
     Array.from(articleContent.contentDocument.getElementsByClassName("noresize")).forEach(function(table){
-      table.style.maxWidth = "90vw !important";
+      table.style.width = "90vw !important";
       table.style.overflowX = "scroll !important"; 
     });
   });
