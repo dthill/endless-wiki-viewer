@@ -1,6 +1,6 @@
 //catch api errors for extract retrival
-//create cards layout?
-//add loaing icon
+//create masonary card layout
+//add loaing icon or text for randomArticles (extracts loading)
 //iFrame overflow on the side on mobile phones
 
 /////////////////////////
@@ -21,7 +21,8 @@ var queryJSON = {
   "pithumbsize": "200",
   "pilimit": "12",
   "grnnamespace": "0",
-  "grnlimit": "12"
+  "grnlimit": "12",
+  "origin": "*"
 };
 
 
@@ -63,25 +64,6 @@ function createAPIurl(obj){
   return result;
 }
 
-function getArticles(){
-  $.getJSON(WIKI_URL + createAPIurl(queryJSON) + "&callback=?", function(receivedData){
-    Object.keys(receivedData.query.pages).forEach(function(articleData){
-      if(receivedData.query.pages[articleData].thumbnail){
-        var thumb = "<img src='" + receivedData.query.pages[articleData].thumbnail.source + "'>"
-      } else {
-        var thumb = "";
-      }
-      var dataObj = {
-        url: "https://en.wikipedia.org/api/rest_v1/page/mobile-html/" + receivedData.query.pages[articleData]["title"],
-        title: receivedData.query.pages[articleData]["title"],
-        extract: receivedData.query.pages[articleData]["extract"],
-        thumbnailSource: thumb
-      };
-      randomArticles.insertAdjacentHTML("beforeend", toTemplate(document.getElementById("featuredArticleTemp"), dataObj));
-    });
-  });
-}
-
 function saveToStorage(){
   localStorage.setItem("readingList", savedArticles.innerHTML);
 }
@@ -92,21 +74,61 @@ function retrieveFromStorage(){
   }
 }
 
+function getArticles(){
+  var XHRExtracts = new XMLHttpRequest();
+  XHRExtracts.responseType = "json";
+  XHRExtracts.onprogress = function(){
+    //show loading gif
+  };
+  XHRExtracts.onload = function(){
+    if (XHRExtracts.readyState === XHRExtracts.DONE) {
+      if (XHRExtracts.status === 200) {
+        var receivedData = XHRExtracts.response;
+        Object.keys(receivedData.query.pages).forEach(function(articleData){
+          if(receivedData.query.pages[articleData].thumbnail){
+            var thumb = "<img src='" + receivedData.query.pages[articleData].thumbnail.source + "'>"
+          } else {
+            var thumb = "";
+          }
+          var dataObj = {
+            url: "https://en.wikipedia.org/api/rest_v1/page/mobile-html/" + receivedData.query.pages[articleData]["title"],
+            title: receivedData.query.pages[articleData]["title"],
+            extract: receivedData.query.pages[articleData]["extract"],
+            thumbnailSource: thumb
+          };
+          randomArticles.insertAdjacentHTML("beforeend", toTemplate(document.getElementById("featuredArticleTemp"), dataObj));
+        });
+      }
+    }
+  };
+  XHRExtracts.onerror = function(){
+    var errorMessage = "<h3>";
+    errorMessage += "Error Loading: " + XHRExtracts.status + " " + XHRExtracts.statusText + " Try Refreshing the Page";
+    errorMessage += "</h3>";
+    randomArticles.insertAdjacentHTML("beforeend", errorMessage);
+  };
+  XHRExtracts.open("GET", WIKI_URL + createAPIurl(queryJSON));
+  XHRExtracts.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+  XHRExtracts.send();
+  //old implementation
+  //$.getJSON(WIKI_URL + createAPIurl(queryJSON) + "&callback=?", function(receivedData){});
+}
+
 // load modal modal content
 function loadModalContents(articleAnchor){
-  var xhr = new XMLHttpRequest();
-  xhr.responseType = 'document';
-  xhr.onload = function(){
-    if (xhr.readyState === xhr.DONE) {
-      if (xhr.status === 200) {
+  var XHRArticleContent = new XMLHttpRequest();
+  XHRArticleContent.responseType = 'document';
+  XHRArticleContent.onload = function(){
+    if (XHRArticleContent.readyState === XHRArticleContent.DONE) {
+      if (XHRArticleContent.status === 200) {
           //loop through all the table elements in the received HTML and change the max-width
-          Array.from(xhr.response.getElementsByTagName("table")).forEach(function(table){
+          Array.from(XHRArticleContent.response.getElementsByTagName("table")).forEach(function(table){
           table.setAttribute("style", "max-width: 90vw !important;");
           //console.log(table);
         });
         viewerBody.innerHTML = '<iframe id="article-content"></iframe>';
         articleContent = viewerBody.children[0];
-        articleContent.contentDocument.write(xhr.response.documentElement.innerHTML);
+        articleContent.contentDocument.write(XHRArticleContent.response.documentElement.innerHTML);
         articleContent.contentDocument.addEventListener("click", function(event){
           event.preventDefault();
           if($(event.target).closest('a').length){
@@ -128,15 +150,15 @@ function loadModalContents(articleAnchor){
       }
     }
   };
-  xhr.onerror = function(){
-    console.log(xhr)
-    articleTitle.innerHTML = "Error Loading: " + xhr.status + " " + xhr.statusText + " Try Again";
+  XHRArticleContent.onerror = function(){
+    console.log(XHRArticleContent)
+    articleTitle.innerHTML = "Error Loading: " + XHRArticleContent.status + " " + XHRArticleContent.statusText + " Try Again";
     viewerBody.innerHTML = '<iframe id="article-content"></iframe>';
     saveArticle.classList.add("d-none");
     removeArticle.classList.add("d-none");
   };
-  xhr.open('GET', articleAnchor.getAttribute("href"));
-  xhr.send();
+  XHRArticleContent.open("GET", articleAnchor.getAttribute("href"));
+  XHRArticleContent.send();
 }
 
 
