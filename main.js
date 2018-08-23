@@ -109,7 +109,7 @@ function loadModalContents(articleAnchor){
     if (xhr.readyState === xhr.DONE) {
       if (xhr.status === 200) {
           Array.from(xhr.response.getElementsByTagName("table")).forEach(function(table){
-          table.setAttribute("style", "max-width: 100% !important;overflow-X: scroll !important;");
+          table.setAttribute("style", "max-width: 100vw !important;overflow-X: scroll !important;");
           console.log(table)
           console.log(table.style)
         });
