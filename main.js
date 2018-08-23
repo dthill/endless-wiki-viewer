@@ -103,43 +103,75 @@ function retrieveFromStorage(){
 
 // load modal modal content
 function loadModalContents(articleAnchor){
-$.get(articleAnchor.getAttribute("href"), function(receivedData){
+  var xhr = new XMLHttpRequest();
+  xhr.responseType = 'document';
+  xhr.onload = function(){
+    if (xhr.readyState === xhr.DONE) {
+      if (xhr.status === 200) {
+          Array.from(xhr.response.getElementsByTagName("table")).forEach(function(table){
+          table.setAttribute("style", "max-width: 50vw !important;");
+          table.style.overflowX = "scroll !important";
+          console.log(table)
+          console.log(table.style)
+        });
+        viewerBody.innerHTML = '<iframe id="article-content"></iframe>';
+        articleContent = viewerBody.children[0];
+        articleContent.contentDocument.write(xhr.response.documentElement.innerHTML);
+        articleContent.contentDocument.addEventListener("click", function(event){
+          event.preventDefault();
+          if($(event.target).closest('a').length){
+            var url = $(event.target).closest('a').attr("href").replace(/^\./ , WIKI_URL +"/wiki");
+            url = url.replace(/^\//, WIKI_URL + "/")
+            window.open(url, "_blank");
+          }
+        });
+        articleContent.contentDocument.addEventListener("keydown", function(event){
+          event.preventDefault();
+          if(event.keyCode === 27 || event.keyCode === 8){
+                $("#article-viewer").collapse("hide");
+                $("#main-section").collapse("show");
+          }
+        });
+        articleContent.contentDocument.close();
+        articleContent.dataset.arttitle = articleAnchor.dataset.title;
+        articleTitle.innerHTML = articleAnchor.dataset.title;
+      }
+    }
+  };
+  xhr.onerror = function(){
+    console.log(xhr)
+    articleTitle.innerHTML = "Error Loading: " + xhr.status + " " + xhr.statusText + " Try Again";
     viewerBody.innerHTML = '<iframe id="article-content"></iframe>';
-    articleContent = viewerBody.children[0];
-    articleContent.contentDocument.write(receivedData);
-    articleContent.contentDocument.addEventListener("click", function(event){
-      event.preventDefault();
-      if($(event.target).closest('a').length){
-        var url = $(event.target).closest('a').attr("href").replace(/^\./ , WIKI_URL +"/wiki");
-        url = url.replace(/^\//, WIKI_URL + "/")
-        window.open(url, "_blank");
-      }
-    });
-    articleContent.contentDocument.addEventListener("keydown", function(event){
-      event.preventDefault();
-      if(event.keyCode === 27 || event.keyCode === 8){
-            $("#article-viewer").collapse("hide");
-            $("#main-section").collapse("show");
-      }
-    });
-    articleContent.contentDocument.close();
-    articleContent.dataset.arttitle = articleAnchor.dataset.title;
-    articleTitle.innerHTML = articleAnchor.dataset.title;
-    Array.from(articleContent.contentDocument.getElementsByClassName("wikitable")).forEach(function(table){
-      table.style.width = "90vw !important";
-      table.style.overflowX = "scroll !important";
-      console.log("Table")
-      console.log(table)
-    });
-    Array.from(articleContent.contentDocument.getElementsByClassName("noresize")).forEach(function(table){
-      table.style.width = "90vw !important";
-      table.style.overflowX = "scroll !important";
-      console.log("noresize")
-      console.log(table)
-    });
-  });
-}
+    saveArticle.classList.add("d-none");
+    removeArticle.classList.add("d-none");
+  };
+  xhr.open('GET', articleAnchor.getAttribute("href"));
+  xhr.send();
 
+  // $.ajax({
+  //   url: articleAnchor.getAttribute("href"),
+  //   dataType: "html",
+  //   success: function(receivedData){  
+  //  },
+  //   error: function(jqXhr, textStatus, errorMessage){
+  //     articleTitle.innerHTML = "Error Loading: " + errorMessage + " Try Again";
+  //     viewerBody.innerHTML = '<iframe id="article-content"></iframe>';
+  //     saveArticle.classList.add("d-none");
+  //     removeArticle.classList.add("d-none");
+  //   },
+  //   complete: function(){
+  //     //put this in ajax complete function
+  //     console.log($(articleContent).contents().find("table"))
+  
+  //     Array.from(articleContent.contentDocument.getElementsByClassName("noresize")).forEach(function(table){
+  //       table.style.width = "90vw !important";
+  //       table.style.overflowX = "scroll !important";
+  //       console.log("noresize")
+  //       console.log(table)
+  //     });
+  //   }
+  // });
+}
 ///////////////////
 //event listeners//
 ///////////////////
