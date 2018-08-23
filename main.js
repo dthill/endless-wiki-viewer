@@ -1,31 +1,12 @@
-//catch api errors
-//adjust number of api calls
-//create cards layout
+//catch api errors for extract retrival
+//create cards layout?
 //add loaing icon
 //iFrame overflow on the side
-//fix save and reload articles: Extract is null
+//fix next and previous buttons in savedArticles
 
-// var queryJSON = {
-//   "action": "query",
-//   "format": "json",
-//   "prop": "extracts|pageimages",
-//   "generator": "categorymembers",
-//   "exchars": "500",
-//   "exlimit": "20",
-//   "exintro": 1,
-//   "explaintext": 1,
-//   "exsectionformat": "plain",
-//   "piprop": "thumbnail",
-//   "pithumbsize": "100",
-//   "pilimit": "20",
-//   "gcmtitle": "Category:Featured_articles",
-//   "gcmprop": "ids|title|timestamp",
-//   "gcmtype": "page",
-//   "gcmlimit": "20",
-//   "gcmsort": "timestamp",
-//   "gcmdir": "older",
-//   "gcmstart": "2016-01-01T12:09:31.000Z"
-// };
+/////////////////////////
+//API related variables//
+/////////////////////////
 
 const WIKI_URL = "https://en.wikipedia.org";
 
@@ -43,6 +24,12 @@ var queryJSON = {
   "grnnamespace": "0",
   "grnlimit": "12"
 };
+
+
+
+/////////////////
+//DOM Variables//
+/////////////////
 
 const randomArticles = document.getElementById("articles");
 const savedArticles = document.getElementById("saved-articles");
@@ -63,6 +50,11 @@ function toTemplate(htmlTemplate, dataObject){
   return htmlTemplate;
 }
 
+
+
+/////////////////////
+//Helping Functions//
+/////////////////////
 
 function createAPIurl(obj){
   var result = "/w/api.php?";
@@ -108,10 +100,10 @@ function loadModalContents(articleAnchor){
   xhr.onload = function(){
     if (xhr.readyState === xhr.DONE) {
       if (xhr.status === 200) {
+          //loop through all the table elements in the received HTML and change the max-width
           Array.from(xhr.response.getElementsByTagName("table")).forEach(function(table){
           table.setAttribute("style", "max-width: 90vw !important;");
-          console.log(table)
-          console.log(table.style)
+          //console.log(table);
         });
         viewerBody.innerHTML = '<iframe id="article-content"></iframe>';
         articleContent = viewerBody.children[0];
@@ -146,31 +138,10 @@ function loadModalContents(articleAnchor){
   };
   xhr.open('GET', articleAnchor.getAttribute("href"));
   xhr.send();
-
-  // $.ajax({
-  //   url: articleAnchor.getAttribute("href"),
-  //   dataType: "html",
-  //   success: function(receivedData){  
-  //  },
-  //   error: function(jqXhr, textStatus, errorMessage){
-  //     articleTitle.innerHTML = "Error Loading: " + errorMessage + " Try Again";
-  //     viewerBody.innerHTML = '<iframe id="article-content"></iframe>';
-  //     saveArticle.classList.add("d-none");
-  //     removeArticle.classList.add("d-none");
-  //   },
-  //   complete: function(){
-  //     //put this in ajax complete function
-  //     console.log($(articleContent).contents().find("table"))
-  
-  //     Array.from(articleContent.contentDocument.getElementsByClassName("noresize")).forEach(function(table){
-  //       table.style.width = "90vw !important";
-  //       table.style.overflowX = "scroll !important";
-  //       console.log("noresize")
-  //       console.log(table)
-  //     });
-  //   }
-  // });
 }
+
+
+
 ///////////////////
 //event listeners//
 ///////////////////
@@ -266,11 +237,17 @@ closeViewer.addEventListener("click", function(event){
   $("#main-section").collapse("show");
 })
 
+
 //previouse button
 document.getElementsByClassName("previous-button")[0].addEventListener("click", function(event){
+  if(document.querySelector("ul .active").children[0].innerText === "Random Articles"){
+    var areaToSearch = randomArticles;
+  } else {
+    var areaToSearch = savedArticles;
+  }
   var title = articleContent.dataset.arttitle;
   if(document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.previousElementSibling){
-    var previousArticle = document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.previousElementSibling.children[0];
+    var previousArticle = areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.previousElementSibling.children[0];
     loadModalContents(previousArticle);
     articleContent.scrollTop = 0;
     articleContent.scrollLeft = 0;
@@ -283,13 +260,16 @@ document.getElementsByClassName("previous-button")[0].addEventListener("click", 
     }
   }
 });
-
-
 //next button
 document.getElementsByClassName("next-button")[0].addEventListener("click", function(event){
+  if(document.querySelector("ul .active").children[0].innerText === "Random Articles"){
+    var areaToSearch = randomArticles;
+  } else {
+    var areaToSearch = savedArticles;
+  }
   var title = articleContent.dataset.arttitle;
   if(document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling){
-    var nextArticle = document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling.children[0];
+    var nextArticle = areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling.children[0];
     loadModalContents(nextArticle);
     articleContent.scrollTop = 0;
     articleContent.scrollLeft = 0;
@@ -303,6 +283,8 @@ document.getElementsByClassName("next-button")[0].addEventListener("click", func
   }
 });
 
+
+
 //save button in viewer
 saveArticle.addEventListener("click", function(event){
   var title = articleContent.dataset.arttitle;
@@ -315,7 +297,6 @@ saveArticle.addEventListener("click", function(event){
   removeArticle.classList.remove("d-none");
   saveToStorage();
 });
-
 //remove button in viewer
 removeArticle.addEventListener("click", function(event){
   var title = articleContent.dataset.arttitle;
@@ -334,7 +315,6 @@ removeArticle.addEventListener("click", function(event){
   $("#main-section").collapse("show");
   this.classList.add("d-none");
 });
-
 // remove all button
 document.getElementById("remove-all-articles").addEventListener("click", function(event){
   savedArticles.innerHTML = "";
