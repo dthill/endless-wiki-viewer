@@ -246,7 +246,7 @@ document.getElementsByClassName("previous-button")[0].addEventListener("click", 
     var areaToSearch = savedArticles;
   }
   var title = articleContent.dataset.arttitle;
-  if(document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.previousElementSibling){
+  if(areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.previousElementSibling){
     var previousArticle = areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.previousElementSibling.children[0];
     loadModalContents(previousArticle);
     articleContent.scrollTop = 0;
@@ -268,7 +268,7 @@ document.getElementsByClassName("next-button")[0].addEventListener("click", func
     var areaToSearch = savedArticles;
   }
   var title = articleContent.dataset.arttitle;
-  if(document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling){
+  if(areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling){
     var nextArticle = areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling.children[0];
     loadModalContents(nextArticle);
     articleContent.scrollTop = 0;
