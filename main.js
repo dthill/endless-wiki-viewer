@@ -1,8 +1,7 @@
 //catch api errors for extract retrival
 //create cards layout?
 //add loaing icon
-//iFrame overflow on the side
-//fix next and previous buttons in savedArticles
+//iFrame overflow on the side on mobile phones
 
 /////////////////////////
 //API related variables//
