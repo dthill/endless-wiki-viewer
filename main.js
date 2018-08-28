@@ -125,7 +125,6 @@ function loadModalContents(articleAnchor){
         Array.from(XHRArticleContent.response.getElementsByTagName("table")).forEach(function(table){
           tableAttr = table.getAttribute("style")
           table.setAttribute("style", "max-width: 90vw !important;overflow-x: scroll;" + tableAttr);
-          console.log(table.getAttribute("style"))
         });
         viewerBody.innerHTML = '<iframe id="article-content"></iframe>';
         articleContent = viewerBody.children[0];
