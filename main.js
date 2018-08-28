@@ -1,7 +1,5 @@
-//catch api errors for extract retrival
-//create masonary card layout
-//add loaing icon or text for randomArticles (extracts loading)
 //iFrame overflow on the side on mobile phones
+//next arrow loading async problem
 
 /////////////////////////
 //API related variables//
@@ -39,7 +37,12 @@ var articleContent;
 const saveArticle = document.getElementById("save-article");
 const removeArticle = document.getElementById("remove-article");
 const closeViewer = document.getElementById("close-viewer");
+var articleInReading;
 
+
+/////////////////////
+//Helping Functions//
+/////////////////////
 
 function toTemplate(htmlTemplate, dataObject){
   htmlTemplate = htmlTemplate.innerHTML
@@ -49,12 +52,6 @@ function toTemplate(htmlTemplate, dataObject){
   });
   return htmlTemplate;
 }
-
-
-
-/////////////////////
-//Helping Functions//
-/////////////////////
 
 function createAPIurl(obj){
   var result = "/w/api.php?";
@@ -79,10 +76,15 @@ function getArticles(){
   XHRExtracts.responseType = "json";
   XHRExtracts.onprogress = function(){
     //show loading gif
+    var loadingExtractsText = "<h2 class='text-center' id='loading-extracts-text'>";
+    loadingExtractsText += "Loading Extracts...";
+    loadingExtractsText += "</h2>";
+    randomArticles.insertAdjacentHTML("beforeend", loadingExtractsText);
   };
   XHRExtracts.onload = function(){
     if (XHRExtracts.readyState === XHRExtracts.DONE) {
       if (XHRExtracts.status === 200) {
+        document.getElementById("loading-extracts-text").outerHTML = "";
         var receivedData = XHRExtracts.response;
         Object.keys(receivedData.query.pages).forEach(function(articleData){
           if(receivedData.query.pages[articleData].thumbnail){
@@ -102,16 +104,15 @@ function getArticles(){
     }
   };
   XHRExtracts.onerror = function(){
-    var errorMessage = "<h3>";
-    errorMessage += "Error Loading: " + XHRExtracts.status + " " + XHRExtracts.statusText + " Try Refreshing the Page";
-    errorMessage += "</h3>";
+    var errorMessage = "<h2 class='text-center'>";
+    errorMessage += "Error Loading: Try Refreshing the Page";
+    errorMessage += "</h2>";
+    randomArticles.onscroll = function(){};
     randomArticles.insertAdjacentHTML("beforeend", errorMessage);
   };
   XHRExtracts.open("GET", WIKI_URL + createAPIurl(queryJSON));
   XHRExtracts.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
   XHRExtracts.send();
-  //old implementation
-  //$.getJSON(WIKI_URL + createAPIurl(queryJSON) + "&callback=?", function(receivedData){});
 }
 
 // load modal modal content
@@ -121,10 +122,10 @@ function loadModalContents(articleAnchor){
   XHRArticleContent.onload = function(){
     if (XHRArticleContent.readyState === XHRArticleContent.DONE) {
       if (XHRArticleContent.status === 200) {
-          //loop through all the table elements in the received HTML and change the max-width
-          Array.from(XHRArticleContent.response.getElementsByTagName("table")).forEach(function(table){
-          table.setAttribute("style", "max-width: 90vw !important;");
-          //console.log(table);
+        Array.from(XHRArticleContent.response.getElementsByTagName("table")).forEach(function(table){
+          tableAttr = table.getAttribute("style")
+          table.setAttribute("style", "max-width: 90vw !important;overflow-x: scroll;" + tableAttr);
+          console.log(table.getAttribute("style"))
         });
         viewerBody.innerHTML = '<iframe id="article-content"></iframe>';
         articleContent = viewerBody.children[0];
@@ -140,8 +141,7 @@ function loadModalContents(articleAnchor){
         articleContent.contentDocument.addEventListener("keydown", function(event){
           event.preventDefault();
           if(event.keyCode === 27 || event.keyCode === 8){
-                $("#article-viewer").collapse("hide");
-                $("#main-section").collapse("show");
+            hideViewer();
           }
         });
         articleContent.contentDocument.close();
@@ -151,8 +151,7 @@ function loadModalContents(articleAnchor){
     }
   };
   XHRArticleContent.onerror = function(){
-    console.log(XHRArticleContent)
-    articleTitle.innerHTML = "Error Loading: " + XHRArticleContent.status + " " + XHRArticleContent.statusText + " Try Again";
+    articleTitle.innerHTML = "Error Loading: Try Again";
     viewerBody.innerHTML = '<iframe id="article-content"></iframe>';
     saveArticle.classList.add("d-none");
     removeArticle.classList.add("d-none");
@@ -161,7 +160,13 @@ function loadModalContents(articleAnchor){
   XHRArticleContent.send();
 }
 
-
+function hideViewer(){
+  $("#article-viewer").collapse("hide");
+  $("#main-section").collapse("show");
+  if(articleInReading){
+    articleInReading.scrollIntoView(true);
+  }
+}
 
 ///////////////////
 //event listeners//
@@ -175,23 +180,21 @@ window.addEventListener("load", function(){
 window.addEventListener("keydown", function(event){
   if(event.keyCode === 27 || event.keyCode === 8){
     event.preventDefault();
-    $("#article-viewer").collapse("hide");
-    $("#main-section").collapse("show");
+    hideViewer();
   }
 });
 
 document.getElementById("article-viewer").addEventListener("click", function(event){
   if(event.target === this){
-    $("#article-viewer").collapse("hide");
-    $("#main-section").collapse("show");
+    hideViewer();
   }
 });
 
-randomArticles.addEventListener("scroll", function(event){
+randomArticles.onscroll = function(){
   if (this.clientHeight  >= (this.scrollHeight - this.scrollTop) * 0.8 ) {
       getArticles();
     }
-});
+};
 
 //navbar links
 $(".nav-link").on("click", function(event){
@@ -254,8 +257,7 @@ document.getElementById("main-section").addEventListener("click", function(event
 
 //close button
 closeViewer.addEventListener("click", function(event){
-  $("#article-viewer").collapse("hide");
-  $("#main-section").collapse("show");
+  hideViewer();
 })
 
 
@@ -272,6 +274,7 @@ document.getElementsByClassName("previous-button")[0].addEventListener("click", 
     loadModalContents(previousArticle);
     articleContent.scrollTop = 0;
     articleContent.scrollLeft = 0;
+    articleInReading = previousArticle;
     if(previousArticle.dataset.saved === "true"){
       saveArticle.classList.add("d-none");
       removeArticle.classList.remove("d-none");
@@ -289,11 +292,17 @@ document.getElementsByClassName("next-button")[0].addEventListener("click", func
     var areaToSearch = savedArticles;
   }
   var title = articleContent.dataset.arttitle;
+  if(!areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling &&
+    areaToSearch === randomArticles){
+    getArticles();
+  }
+  //problem with getArticle being async, requires two clicks to procede
   if(areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling){
     var nextArticle = areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling.children[0];
     loadModalContents(nextArticle);
     articleContent.scrollTop = 0;
     articleContent.scrollLeft = 0;
+    articleInReading = nextArticle;
     if(nextArticle.dataset.saved === "true"){
       saveArticle.classList.add("d-none");
       removeArticle.classList.remove("d-none");
