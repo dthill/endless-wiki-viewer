@@ -1,4 +1,5 @@
 //next arrow loading async problem
+//add timespam to API request to avoid caching on firefox mobile
 
 /////////////////////////
 //API related variables//
@@ -19,7 +20,8 @@ var queryJSON = {
   "pilimit": "12",
   "grnnamespace": "0",
   "grnlimit": "12",
-  "origin": "*"
+  "origin": "*",
+  "?": ""
 };
 
 /////////////////
@@ -53,7 +55,11 @@ function toTemplate(htmlTemplate, dataObject){
 function createAPIurl(obj){
   var result = "/w/api.php?";
   Object.keys(obj).forEach(function(queryKey){
-    result += "&" + queryKey + "=" + obj[queryKey];
+    if(queryKey === "?"){
+      result += "&" + queryKey + "=" + new Date().getTime();
+    } else {
+      result += "&" + queryKey + "=" + obj[queryKey];
+    }
   });
   return result;
 }
