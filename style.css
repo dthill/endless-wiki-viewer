@@ -17,7 +17,7 @@
 
 
 
-#articles a, #saved-articles a {
+#articles a, #saved-articles a, #article-title a{
   text-decoration: none;
   color: black;
 }

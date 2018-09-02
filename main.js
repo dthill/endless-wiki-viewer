@@ -1,6 +1,7 @@
 //next arrow loading async problem
 //api request fairplay include email?
 //Set a unique User-Agent or Api-User-Agent header that allows us to contact you quickly. Email addresses or URLs of contact pages work well.
+//check parse API action
 
 /////////////////////////
 //API related variables//
@@ -149,7 +150,10 @@ function loadModalContents(articleAnchor){
         });
         articleContent.contentDocument.close();
         articleContent.dataset.arttitle = articleAnchor.dataset.title;
-        articleTitle.innerHTML = "<a target='_blank' href='https://en.wikipedia.org/wiki/" + articleAnchor.dataset.title + "'>" + articleAnchor.dataset.title + "</a>";
+        articleTitle.innerHTML = "<a target='_blank' href='https://en.wikipedia.org/wiki/" + 
+          articleAnchor.dataset.title.replace(/\s/gm, "_") + 
+          "'>" + articleAnchor.dataset.title + 
+          "<span class='align-text-bottom'>&#32;&#11016;</span>" + "</a>";
       }
     }
   };
