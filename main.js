@@ -148,7 +148,7 @@ function loadModalContents(articleAnchor){
         });
         articleContent.contentDocument.close();
         articleContent.dataset.arttitle = articleAnchor.dataset.title;
-        articleTitle.innerHTML = articleAnchor.dataset.title;
+        articleTitle.innerHTML = "<a target='_blank' href='https://en.wikipedia.org/wiki/" + articleAnchor.dataset.title + "'>" + articleAnchor.dataset.title + "</a>";
       }
     }
   };
