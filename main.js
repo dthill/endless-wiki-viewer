@@ -1,5 +1,6 @@
 //next arrow loading async problem
-//add timespam to API request to avoid caching on firefox mobile
+//api request fairplay include email?
+//Set a unique User-Agent or Api-User-Agent header that allows us to contact you quickly. Email addresses or URLs of contact pages work well.
 
 /////////////////////////
 //API related variables//
@@ -21,7 +22,7 @@ var queryJSON = {
   "grnnamespace": "0",
   "grnlimit": "12",
   "origin": "*",
-  "?": ""
+  "requestid": ""
 };
 
 /////////////////
@@ -55,7 +56,7 @@ function toTemplate(htmlTemplate, dataObject){
 function createAPIurl(obj){
   var result = "/w/api.php?";
   Object.keys(obj).forEach(function(queryKey){
-    if(queryKey === "?"){
+    if(queryKey === "requestid"){
       result += "&" + queryKey + "=" + new Date().getTime();
     } else {
       result += "&" + queryKey + "=" + obj[queryKey];
