@@ -153,7 +153,7 @@ function loadModalContents(articleAnchor){
         articleTitle.innerHTML = "<a target='_blank' href='https://en.wikipedia.org/wiki/" + 
           articleAnchor.dataset.title.replace(/\s/gm, "_") + 
           "'>" + articleAnchor.dataset.title + 
-          "<span class='align-text-bottom'>&#32;&#11016;</span>" + "</a>";
+          "<span class='align-text-bottom'>&#32;&#11008;</span>" + "</a>";
       }
     }
   };
