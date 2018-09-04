@@ -1,4 +1,3 @@
-//arrow firefox mobile
 //escape ' in title querys and links in header'
 
 /////////////////////////
