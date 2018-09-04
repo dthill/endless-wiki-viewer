@@ -1,7 +1,5 @@
-//next arrow loading async problem
-//api request fairplay include email?
-//Set a unique User-Agent or Api-User-Agent header that allows us to contact you quickly. Email addresses or URLs of contact pages work well.
-//check parse API action
+//arrow firefox mobile
+//escape ' in title querys and links in header'
 
 /////////////////////////
 //API related variables//
@@ -89,7 +87,7 @@ function getArticles(){
   XHRExtracts.onload = function(){
     if (XHRExtracts.readyState === XHRExtracts.DONE) {
       if (XHRExtracts.status === 200) {
-        document.getElementById("loading-extracts-text").outerHTML = "";
+        document.getElementById("loading-extracts-text").parentNode.removeChild(document.getElementById("loading-extracts-text"));
         var receivedData = XHRExtracts.response;
         Object.keys(receivedData.query.pages).forEach(function(articleData){
           if(receivedData.query.pages[articleData].thumbnail){
@@ -105,6 +103,7 @@ function getArticles(){
           };
           randomArticles.insertAdjacentHTML("beforeend", toTemplate(document.getElementById("featuredArticleTemp"), dataObj));
         });
+        return true;
       }
     }
   };
@@ -114,6 +113,7 @@ function getArticles(){
     errorMessage += "</h2>";
     randomArticles.onscroll = function(){};
     randomArticles.insertAdjacentHTML("beforeend", errorMessage);
+    return false;
   };
   XHRExtracts.open("GET", WIKI_URL + createAPIurl(queryJSON));
   XHRExtracts.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
@@ -124,6 +124,9 @@ function getArticles(){
 function loadModalContents(articleAnchor){
   var XHRArticleContent = new XMLHttpRequest();
   XHRArticleContent.responseType = 'document';
+  XHRArticleContent.onprogress = function(){
+    viewerBody.innerHTML = '<div id="article-content"><h2 class="text-center">Loading...</h2></div>';
+  }
   XHRArticleContent.onload = function(){
     if (XHRArticleContent.readyState === XHRArticleContent.DONE) {
       if (XHRArticleContent.status === 200) {
@@ -146,6 +149,10 @@ function loadModalContents(articleAnchor){
           event.preventDefault();
           if(event.keyCode === 27 || event.keyCode === 8){
             hideViewer();
+          } else if(event.keyCode === 37){
+            loadPrevious();
+          } else if(event.keyCode === 39){
+            loadNext();
           }
         });
         articleContent.contentDocument.close();
@@ -175,6 +182,71 @@ function hideViewer(){
   }
 }
 
+function loadNext(){
+  if(document.querySelector("ul .active").children[0].innerText === "Random Articles"){
+    var areaToSearch = randomArticles;
+  } else {
+    var areaToSearch = savedArticles;
+  }
+  var title = articleContent.dataset.arttitle;
+  if(areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling){
+    var nextArticle = areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling.children[0];
+    loadModalContents(nextArticle);
+    articleContent.scrollTop = 0;
+    articleContent.scrollLeft = 0;
+    articleInReading = nextArticle;
+    if(nextArticle.dataset.saved === "true"){
+      saveArticle.classList.add("d-none");
+      removeArticle.classList.remove("d-none");
+    } else {
+      removeArticle.classList.add("d-none");
+      saveArticle.classList.remove("d-none");
+    }
+  } else {
+    var promiseArticles = new Promise(function (resolve, reject) {
+      getArticles()
+      resolve();
+    });
+    promiseArticles.then(function(){
+      var nextArticle = areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling.children[0];
+      loadModalContents(nextArticle);
+      articleContent.scrollTop = 0;
+      articleContent.scrollLeft = 0;
+      articleInReading = nextArticle;
+      if(nextArticle.dataset.saved === "true"){
+        saveArticle.classList.add("d-none");
+        removeArticle.classList.remove("d-none");
+      } else {
+        removeArticle.classList.add("d-none");
+        saveArticle.classList.remove("d-none");
+      }
+    });
+  }
+}
+
+function loadPrevious(){
+  if(document.querySelector("ul .active").children[0].innerText === "Random Articles"){
+    var areaToSearch = randomArticles;
+  } else {
+    var areaToSearch = savedArticles;
+  }
+  var title = articleContent.dataset.arttitle;
+  if(areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.previousElementSibling){
+    var previousArticle = areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.previousElementSibling.children[0];
+    loadModalContents(previousArticle);
+    articleContent.scrollTop = 0;
+    articleContent.scrollLeft = 0;
+    articleInReading = previousArticle;
+    if(previousArticle.dataset.saved === "true"){
+      saveArticle.classList.add("d-none");
+      removeArticle.classList.remove("d-none");
+    } else {
+      removeArticle.classList.add("d-none");
+      saveArticle.classList.remove("d-none");
+    }
+  }
+}
+
 ///////////////////
 //event listeners//
 ///////////////////
@@ -188,13 +260,17 @@ window.addEventListener("keydown", function(event){
   if(event.keyCode === 27 || event.keyCode === 8){
     event.preventDefault();
     hideViewer();
+  } else if(event.keyCode === 37){
+    loadPrevious();
+  } else if(event.keyCode === 39){
+    loadNext();
   }
 });
 
 document.getElementById("article-viewer").addEventListener("click", function(event){
   if(event.target === this){
     hideViewer();
-  }
+  } 
 });
 
 randomArticles.onscroll = function(){
@@ -270,55 +346,13 @@ closeViewer.addEventListener("click", function(event){
 
 //previouse button
 document.getElementsByClassName("previous-button")[0].addEventListener("click", function(event){
-  if(document.querySelector("ul .active").children[0].innerText === "Random Articles"){
-    var areaToSearch = randomArticles;
-  } else {
-    var areaToSearch = savedArticles;
-  }
-  var title = articleContent.dataset.arttitle;
-  if(areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.previousElementSibling){
-    var previousArticle = areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.previousElementSibling.children[0];
-    loadModalContents(previousArticle);
-    articleContent.scrollTop = 0;
-    articleContent.scrollLeft = 0;
-    articleInReading = previousArticle;
-    if(previousArticle.dataset.saved === "true"){
-      saveArticle.classList.add("d-none");
-      removeArticle.classList.remove("d-none");
-    } else {
-      removeArticle.classList.add("d-none");
-      saveArticle.classList.remove("d-none");
-    }
-  }
+  loadPrevious();
 });
 //next button
 document.getElementsByClassName("next-button")[0].addEventListener("click", function(event){
-  if(document.querySelector("ul .active").children[0].innerText === "Random Articles"){
-    var areaToSearch = randomArticles;
-  } else {
-    var areaToSearch = savedArticles;
-  }
-  var title = articleContent.dataset.arttitle;
-  if(!areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling &&
-    areaToSearch === randomArticles){
-    getArticles();
-  }
-  //problem with getArticle being async, requires two clicks to procede
-  if(areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling){
-    var nextArticle = areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling.children[0];
-    loadModalContents(nextArticle);
-    articleContent.scrollTop = 0;
-    articleContent.scrollLeft = 0;
-    articleInReading = nextArticle;
-    if(nextArticle.dataset.saved === "true"){
-      saveArticle.classList.add("d-none");
-      removeArticle.classList.remove("d-none");
-    } else {
-      removeArticle.classList.add("d-none");
-      saveArticle.classList.remove("d-none");
-    }
-  }
+  loadNext();
 });
+  
 
 
 
