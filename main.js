@@ -160,7 +160,7 @@ function loadModalContents(articleAnchor){
         articleTitle.innerHTML = "<a target='_blank' href='https://en.wikipedia.org/wiki/" + 
           articleAnchor.dataset.title.replace(/\s/gm, "_") + 
           "'>" + articleAnchor.dataset.title + 
-          "<span class='align-text-bottom'>&#32;&#8599;</span>" + "</a>";
+          "<span class='align-text-top very-small'>&#32;<i class='fas fa-external-link-alt'></i></span>" + "</a>";
       }
     }
   };
@@ -297,7 +297,9 @@ $(".nav-link").on("click", function(event){
       $("#article-viewer").collapse("hide");
       $("#main-section").collapse("show");
     }
-    $('.navbar-toggler').click();
+    if($("#nav-button").is(":visible")){
+      $('.navbar-toggler').click();
+    }
 });
 
 //all clicks on main section including: opening viewer, save extract button and remove extract button

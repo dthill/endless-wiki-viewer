@@ -79,3 +79,7 @@
     background-color: darkgray;
     cursor: pointer;
 }
+
+.very-small{
+  font-size: 0.7em;
+}
