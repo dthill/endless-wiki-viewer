@@ -1,4 +1,4 @@
-//escape ' in title querys and links in header'
+//iFrame overflow of tables
 
 /////////////////////////
 //API related variables//
@@ -95,7 +95,7 @@ function getArticles(){
             var thumb = "";
           }
           var dataObj = {
-            url: "https://en.wikipedia.org/api/rest_v1/page/mobile-html/" + receivedData.query.pages[articleData]["title"],
+            url: "https://en.wikipedia.org/api/rest_v1/page/mobile-html/" + encodeURIComponent(receivedData.query.pages[articleData]["title"]),
             title: receivedData.query.pages[articleData]["title"],
             extract: receivedData.query.pages[articleData]["extract"],
             thumbnailSource: thumb
@@ -156,10 +156,10 @@ function loadModalContents(articleAnchor){
         });
         articleContent.contentDocument.close();
         articleContent.dataset.arttitle = articleAnchor.dataset.title;
-        articleTitle.innerHTML = "<a target='_blank' href='https://en.wikipedia.org/wiki/" + 
-          articleAnchor.dataset.title.replace(/\s/gm, "_") + 
-          "'>" + articleAnchor.dataset.title + 
-          "<span class='align-text-top very-small'>&#32;<i class='fas fa-external-link-alt'></i></span>" + "</a>";
+        var titleLink = articleAnchor.dataset.title.replace(/\s/gim, "_");
+        articleTitle.innerHTML = '<a target="_blank" href="https://en.wikipedia.org/wiki/' + 
+          encodeURIComponent(articleAnchor.dataset.title) + '">' + articleAnchor.dataset.title + 
+          '<span class="align-text-top very-small">&#32;<i class="fas fa-external-link-alt"></i></span>' + '</a>';
       }
     }
   };
@@ -188,8 +188,8 @@ function loadNext(){
     var areaToSearch = savedArticles;
   }
   var title = articleContent.dataset.arttitle;
-  if(areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling){
-    var nextArticle = areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling.children[0];
+  if(areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]').parentNode.nextElementSibling){
+    var nextArticle = areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]').parentNode.nextElementSibling.children[0];
     loadModalContents(nextArticle);
     articleContent.scrollTop = 0;
     articleContent.scrollLeft = 0;
@@ -207,7 +207,7 @@ function loadNext(){
       resolve();
     });
     promiseArticles.then(function(){
-      var nextArticle = areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.nextElementSibling.children[0];
+      var nextArticle = areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]').parentNode.nextElementSibling.children[0];
       loadModalContents(nextArticle);
       articleContent.scrollTop = 0;
       articleContent.scrollLeft = 0;
@@ -230,8 +230,8 @@ function loadPrevious(){
     var areaToSearch = savedArticles;
   }
   var title = articleContent.dataset.arttitle;
-  if(areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.previousElementSibling){
-    var previousArticle = areaToSearch.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']").parentNode.previousElementSibling.children[0];
+  if(areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]').parentNode.previousElementSibling){
+    var previousArticle = areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]').parentNode.previousElementSibling.children[0];
     loadModalContents(previousArticle);
     articleContent.scrollTop = 0;
     articleContent.scrollLeft = 0;
@@ -313,10 +313,10 @@ document.getElementById("main-section").addEventListener("click", function(event
   } else if(event.target.classList.contains("remove-extract")){
     event.target.parentNode.dataset.saved = "false";
     var title = event.target.parentNode.dataset.title;
-    var article = savedArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
+    var article = savedArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]');
         //error here first check if it exists before using it
-    if(randomArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']")){
-      var extract = randomArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
+    if(randomArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]')){
+      var extract = randomArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]');
       extract.dataset.saved = "false";
       extract.querySelector(".remove-extract").classList.add("d-none");
       extract.querySelector(".save-extract").classList.remove("d-none");
@@ -360,7 +360,7 @@ document.getElementsByClassName("next-button")[0].addEventListener("click", func
 //save button in viewer
 saveArticle.addEventListener("click", function(event){
   var title = articleContent.dataset.arttitle;
-  var extract = document.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
+  var extract = document.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]');
   extract.dataset.saved = "true";
   this.classList.add("d-none");
   extract.querySelector(".save-extract").classList.add("d-none");
@@ -372,10 +372,10 @@ saveArticle.addEventListener("click", function(event){
 //remove button in viewer
 removeArticle.addEventListener("click", function(event){
   var title = articleContent.dataset.arttitle;
-  var article = savedArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
+  var article = savedArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]');
     //error here fix this and close modal on click
-  if(randomArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']")){
-    var extract = randomArticles.querySelector("[data-title='"+ title.replace(/'/gmi, "\'") +"']");
+  if(randomArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]')){
+    var extract = randomArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]');
     extract.querySelector(".remove-extract").classList.add("d-none");
     extract.querySelector(".save-extract").classList.remove("d-none");
     extract.dataset.saved = "false";
@@ -394,6 +394,11 @@ document.getElementById("remove-all-articles").addEventListener("click", functio
   $(".save-extract").removeClass("d-none");
   $(".remove-extract").addClass("d-none");
   $('[data-saved="true"]').attr("data-saved","false");
-  $('.navbar-toggler').click();
+  if($("#nav-button").is(":visible")){
+    $('.navbar-toggler').click();
+  }
+  if(document.querySelector("ul .active").children[0].innerText === "Reading List"){
+    hideViewer();
+  }
 });
 
