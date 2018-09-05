@@ -1,4 +1,6 @@
 //iFrame overflow of tables
+//license?
+// replace \\" with \\\"
 
 /////////////////////////
 //API related variables//
@@ -188,8 +190,8 @@ function loadNext(){
     var areaToSearch = savedArticles;
   }
   var title = articleContent.dataset.arttitle;
-  if(areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]').parentNode.nextElementSibling){
-    var nextArticle = areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]').parentNode.nextElementSibling.children[0];
+  if(areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]').parentNode.nextElementSibling){
+    var nextArticle = areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]').parentNode.nextElementSibling.children[0];
     loadModalContents(nextArticle);
     articleContent.scrollTop = 0;
     articleContent.scrollLeft = 0;
@@ -207,7 +209,7 @@ function loadNext(){
       resolve();
     });
     promiseArticles.then(function(){
-      var nextArticle = areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]').parentNode.nextElementSibling.children[0];
+      var nextArticle = areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]').parentNode.nextElementSibling.children[0];
       loadModalContents(nextArticle);
       articleContent.scrollTop = 0;
       articleContent.scrollLeft = 0;
@@ -230,8 +232,8 @@ function loadPrevious(){
     var areaToSearch = savedArticles;
   }
   var title = articleContent.dataset.arttitle;
-  if(areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]').parentNode.previousElementSibling){
-    var previousArticle = areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]').parentNode.previousElementSibling.children[0];
+  if(areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]').parentNode.previousElementSibling){
+    var previousArticle = areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]').parentNode.previousElementSibling.children[0];
     loadModalContents(previousArticle);
     articleContent.scrollTop = 0;
     articleContent.scrollLeft = 0;
@@ -313,10 +315,10 @@ document.getElementById("main-section").addEventListener("click", function(event
   } else if(event.target.classList.contains("remove-extract")){
     event.target.parentNode.dataset.saved = "false";
     var title = event.target.parentNode.dataset.title;
-    var article = savedArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]');
+    var article = savedArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]');
         //error here first check if it exists before using it
-    if(randomArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]')){
-      var extract = randomArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]');
+    if(randomArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]')){
+      var extract = randomArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]');
       extract.dataset.saved = "false";
       extract.querySelector(".remove-extract").classList.add("d-none");
       extract.querySelector(".save-extract").classList.remove("d-none");
@@ -360,7 +362,7 @@ document.getElementsByClassName("next-button")[0].addEventListener("click", func
 //save button in viewer
 saveArticle.addEventListener("click", function(event){
   var title = articleContent.dataset.arttitle;
-  var extract = document.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]');
+  var extract = document.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]');
   extract.dataset.saved = "true";
   this.classList.add("d-none");
   extract.querySelector(".save-extract").classList.add("d-none");
@@ -372,10 +374,10 @@ saveArticle.addEventListener("click", function(event){
 //remove button in viewer
 removeArticle.addEventListener("click", function(event){
   var title = articleContent.dataset.arttitle;
-  var article = savedArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]');
+  var article = savedArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]');
     //error here fix this and close modal on click
-  if(randomArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]')){
-    var extract = randomArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\"') +'"]');
+  if(randomArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]')){
+    var extract = randomArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]');
     extract.querySelector(".remove-extract").classList.add("d-none");
     extract.querySelector(".save-extract").classList.remove("d-none");
     extract.dataset.saved = "false";
