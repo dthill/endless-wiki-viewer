@@ -83,3 +83,10 @@
 .very-small{
   font-size: 0.7em;
 }
+
+#loading-extracts {
+  position: fixed;
+  bottom: 0;
+  background: white;
+  width: 100%;
+}

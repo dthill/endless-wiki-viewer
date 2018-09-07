@@ -99,16 +99,12 @@ function getArticles(){
   var XHRExtracts = new XMLHttpRequest();
   XHRExtracts.responseType = "json";
   XHRExtracts.onprogress = function(){
-    //show loading gif
-    var loadingExtractsText = "<h2 class='text-center' id='loading-extracts-text'>";
-    loadingExtractsText += "Loading Extracts...";
-    loadingExtractsText += "</h2>";
-    randomArticles.insertAdjacentHTML("beforeend", loadingExtractsText);
+    document.getElementById("loading-extracts").classList.remove("d-none");
   };
   XHRExtracts.onload = function(){
     if (XHRExtracts.readyState === XHRExtracts.DONE) {
       if (XHRExtracts.status === 200) {
-        document.getElementById("loading-extracts-text").parentNode.removeChild(document.getElementById("loading-extracts-text"));
+        document.getElementById("loading-extracts").classList.add("d-none");
         var receivedData = XHRExtracts.response;
         Object.keys(receivedData.query.pages).forEach(function(articleData){
           if(receivedData.query.pages[articleData].thumbnail){
