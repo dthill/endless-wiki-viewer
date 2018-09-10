@@ -198,7 +198,7 @@ function hideViewer(){
   $("#article-viewer").collapse("hide");
   $("#main-section").collapse("show");
   if(articleInReading){
-    articleInReading.scrollIntoView(true);
+    articleInReading.scrollIntoView({block: "center"});
   }
   articleInReading = undefined;
 }
