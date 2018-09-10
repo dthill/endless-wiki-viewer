@@ -7,6 +7,9 @@
   padding: 0;
 }
 
+.nav-link{
+  padding: 0.5em;
+}
 
 .featuredArticle img {
   float: left;
@@ -18,6 +21,10 @@
 #articles a, #saved-articles a, #article-title a{
   text-decoration: none;
   color: black;
+}
+
+#article-title {
+  word-wrap: break-word;
 }
 
 #article-content {
@@ -42,16 +49,19 @@
   top: 0;
   right: 0;
   font-size: 1.5em;
-  margin: 1rem;
+  margin-right: 0.2rem;
   border-radius: 0.25rem;
   cursor: pointer;
   background-color: lightgray;
-  font-weight: bolder;
   z-index: 2000;
   width: 2em;
   height: 2em;
   text-align: center;
   opacity: 0.7;
+}
+
+#save-article, #remove-article {
+  margin-left: 0.2rem;
 }
 
 .previous-button, .next-button {
