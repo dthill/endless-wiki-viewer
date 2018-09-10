@@ -148,7 +148,15 @@ function loadModalContents(articleAnchor){
     if (XHRArticleContent.readyState === XHRArticleContent.DONE) {
       if (XHRArticleContent.status === 200) {
         Array.from(XHRArticleContent.response.getElementsByTagName("table")).forEach(function(table){
-          $(table).wrap("<div style='overflow:scroll; max-width:95vw;'></div>");
+          var tableWrapper = XHRArticleContent.response.createElement("div");
+          tableWrapper.setAttribute("style","overflow:scroll; max-width:95vw;")
+          tableWrapper.innerHTML = table.outerHTML;
+          table.parentNode.insertBefore(tableWrapper, table);
+          table.remove();
+          //tableWrapper.appendChild(table);
+          console.log(tableWrapper);
+          //table.insertAdjacentHTML("<div style='overflow:scroll; max-width:95vw;'>");
+          //table.insertAdjacentHTML("afterend", "</div");
         });
         viewerBody.innerHTML = '<iframe id="article-content"></iframe>';
         articleContent = viewerBody.children[0];
