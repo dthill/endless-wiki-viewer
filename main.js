@@ -1,4 +1,4 @@
-//iFrame overflow of tables
+//iFrame horizontal scrollbars
 
 // MIT License
 //
@@ -214,6 +214,7 @@ function loadNext(){
   if(areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]').parentNode.nextElementSibling){
     var nextArticle = areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]').parentNode.nextElementSibling.children[0];
     loadModalContents(nextArticle);
+    window.scrollTo(0,0);
     articleContent.scrollTop = 0;
     articleContent.scrollLeft = 0;
     articleInReading = nextArticle;
@@ -232,6 +233,7 @@ function loadNext(){
     promiseArticles.then(function(){
       var nextArticle = areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]').parentNode.nextElementSibling.children[0];
       loadModalContents(nextArticle);
+      window.scrollTo(0,0);
       articleContent.scrollTop = 0;
       articleContent.scrollLeft = 0;
       articleInReading = nextArticle;
@@ -256,6 +258,7 @@ function loadPrevious(){
   if(areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]').parentNode.previousElementSibling){
     var previousArticle = areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]').parentNode.previousElementSibling.children[0];
     loadModalContents(previousArticle);
+    window.scrollTo(0,0);
     articleContent.scrollTop = 0;
     articleContent.scrollLeft = 0;
     articleInReading = previousArticle;
