@@ -96,11 +96,9 @@ function retrieveFromStorage(){
 }
 
 function getArticles(){
+  document.getElementById("loading-extracts").classList.remove("d-none");
   var XHRExtracts = new XMLHttpRequest();
   XHRExtracts.responseType = "json";
-  XHRExtracts.onprogress = function(){
-    document.getElementById("loading-extracts").classList.remove("d-none");
-  };
   XHRExtracts.onload = function(){
     if (XHRExtracts.readyState === XHRExtracts.DONE) {
       if (XHRExtracts.status === 200) {
@@ -139,11 +137,9 @@ function getArticles(){
 
 // load modal modal content
 function loadModalContents(articleAnchor){
+  viewerBody.innerHTML = '<div id="article-content"><h2 class="text-center">Loading...</h2></div>';
   var XHRArticleContent = new XMLHttpRequest();
-  XHRArticleContent.responseType = 'document';
-  XHRArticleContent.onprogress = function(){
-    viewerBody.innerHTML = '<div id="article-content"><h2 class="text-center">Loading...</h2></div>';
-  }
+  XHRArticleContent.responseType = "document";
   XHRArticleContent.onload = function(){
     if (XHRArticleContent.readyState === XHRArticleContent.DONE) {
       if (XHRArticleContent.status === 200) {
@@ -202,6 +198,7 @@ function hideViewer(){
   if(articleInReading){
     articleInReading.scrollIntoView(true);
   }
+  articleInReading = undefined;
 }
 
 function loadNext(){
