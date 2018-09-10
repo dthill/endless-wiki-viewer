@@ -90,3 +90,15 @@
   background: white;
   width: 100%;
 }
+
+.loading-text {
+  animation-name: loading;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes loading {
+    0%   {height: 0;}
+    50%  {height: 100%;}
+    100% {height: 0;}
+}
