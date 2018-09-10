@@ -296,7 +296,7 @@ document.getElementById("article-viewer").addEventListener("click", function(eve
 });
 
 randomArticles.onscroll = function(){
-  if (this.clientHeight  >= (this.scrollHeight - this.scrollTop) * 0.8 ) {
+  if (this.clientHeight  >= (this.scrollHeight - this.scrollTop) * 0.75) {
       getArticles();
     }
 };
