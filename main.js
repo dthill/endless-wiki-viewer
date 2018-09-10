@@ -154,7 +154,7 @@ function loadModalContents(articleAnchor){
         });
         Array.from(XHRArticleContent.response.getElementsByTagName("section")).forEach(function(section){
           var sectionWrapper = XHRArticleContent.response.createElement("div");
-          sectionWrapper.setAttribute("style","overflow:scroll; max-width:98vw;")
+          sectionWrapper.setAttribute("style","overflow:scroll; max-width:100vw;")
           sectionWrapper.innerHTML = section.outerHTML;
           section.parentNode.insertBefore(sectionWrapper, section);
           section.remove();
