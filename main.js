@@ -147,6 +147,7 @@ function loadModalContents(articleAnchor){
   XHRArticleContent.onload = function(){
     if (XHRArticleContent.readyState === XHRArticleContent.DONE) {
       if (XHRArticleContent.status === 200) {
+        console.log(XHRArticleContent.response);
         Array.from(XHRArticleContent.response.getElementsByTagName("table")).forEach(function(table){
           tableAttr = table.getAttribute("style")
           table.setAttribute("style", "max-width: 90vw !important;overflow-x: scroll;" + tableAttr);
