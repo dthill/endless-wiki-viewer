@@ -139,6 +139,7 @@ function getArticles(){
 function loadModalContents(articleAnchor){
   console.log(articleAnchor)
   document.getElementById("article-title").innerHTML = "Loading...";
+  viewerBody.innerHTML = '<iframe id="article-content"></iframe>';
   var XHRArticleContent = new XMLHttpRequest();
   XHRArticleContent.responseType = "document";
   XHRArticleContent.onload = function(){
