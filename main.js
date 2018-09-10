@@ -155,8 +155,8 @@ function loadModalContents(articleAnchor){
         Array.from(XHRArticleContent.response.getElementsByTagName("section")).forEach(function(section){
           var sectionWrapper = XHRArticleContent.response.createElement("div");
           sectionWrapper.setAttribute("style","overflow:scroll; max-width:95vw;")
-          sectionWrapper.innerHTML = table.outerHTML;
-          section.parentNode.insertBefore(tableWrapper, table);
+          sectionWrapper.innerHTML = section.outerHTML;
+          section.parentNode.insertBefore(sectionWrapper, section);
           section.remove();
         });
         viewerBody.innerHTML = '<iframe id="article-content"></iframe>';
