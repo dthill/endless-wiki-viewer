@@ -148,8 +148,7 @@ function loadModalContents(articleAnchor){
     if (XHRArticleContent.readyState === XHRArticleContent.DONE) {
       if (XHRArticleContent.status === 200) {
         Array.from(XHRArticleContent.response.getElementsByTagName("table")).forEach(function(table){
-          table.insertAdjacentHTML("beforebegin", "<div style='overflow:scroll; max-width:95vw;'>");
-          table.insertAdjacentHTML("afterend", "</div");
+          $(table).wrap("<div style='overflow:scroll; max-width:95vw;'></div>");
         });
         viewerBody.innerHTML = '<iframe id="article-content"></iframe>';
         articleContent = viewerBody.children[0];
