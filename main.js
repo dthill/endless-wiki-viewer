@@ -138,7 +138,7 @@ function getArticles(){
 // load modal modal content
 function loadModalContents(articleAnchor){
   console.log(articleAnchor)
-  viewerBody.innerHTML = '<div id="article-content"><h2 class="text-center">Loading...</h2></div>';
+  document.getElementById("article-title").innerHTML = '<div id="article-content"><h2 class="text-center">Loading...</h2></div>';
   var XHRArticleContent = new XMLHttpRequest();
   XHRArticleContent.responseType = "document";
   XHRArticleContent.onload = function(){
