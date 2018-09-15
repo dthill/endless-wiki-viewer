@@ -197,7 +197,7 @@ function loadModalContents(articleAnchor){
         //wrap all tables of the response article document in a div to avoid overflow on small mobile devices
         wrapElements(XHRArticleContent.response, "table");
         //wrap all sections of the response article document in a div to avoid overflow on small mobile devices
-        wrapElements(XHRArticleContent.response, "sections");
+        wrapElements(XHRArticleContent.response, "section");
         //create or replace existing iFrame where content for the article will be loaded
         viewerBody.innerHTML = '<iframe id="article-content"></iframe>';
         articleContent = viewerBody.children[0];
