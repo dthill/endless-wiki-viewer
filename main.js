@@ -90,7 +90,7 @@ function toTemplate(htmlTemplate, dataObject){
 function wrapElements(htmlDOM, elementType){
   Array.from(htmlDOM.getElementsByTagName(elementType)).forEach(function(section){
           var sectionWrapper = htmlDOM.createElement("div");
-          sectionWrapper.setAttribute("style","overflow:scroll; max-width:99vw;")
+          sectionWrapper.setAttribute("style","overflow:scroll; max-width:100vw;")
           sectionWrapper.innerHTML = section.outerHTML;
           section.parentNode.insertBefore(sectionWrapper, section);
           section.remove();
