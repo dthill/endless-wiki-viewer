@@ -1,3 +1,7 @@
+//////////////////////
+//Endles Wiki Viewer//
+//////////////////////
+//
 // MIT License
 //
 // Copyright (c) 2018 Damien Thill
@@ -33,7 +37,7 @@ var queryJSON = {
   "generator": "random", //generate list of random articles
   "exchars": "500", //number of charaters per extract
   "exlimit": "12", // number of extracts loaded
-  "exintro": 1, //just provide text from the first section
+  "exintro": 1, //just provide an extract text from the first section
   "explaintext": 1, //format of returned text is plain text not html or wikitext
   "pithumbsize": "200", //size of thumbnail
   "pilimit": "12", //number of thumbnails
@@ -72,7 +76,7 @@ var articleInReading;
 /////////////////////
 
 
-//add template to page
+//take data object and format it into a template to be added to the page
 function toTemplate(htmlTemplate, dataObject){
   htmlTemplate = htmlTemplate.innerHTML
   Object.keys(dataObject).forEach(function(dataItem){
@@ -82,11 +86,11 @@ function toTemplate(htmlTemplate, dataObject){
   return htmlTemplate;
 }
 
-//wrap all element in a given html document in a div to avoid overflow on mobile devices 
+//wrap all element in a given html document in a DIV to avoid overflow on mobile devices 
 function wrapElements(htmlDOM, elementType){
   Array.from(htmlDOM.getElementsByTagName(elementType)).forEach(function(section){
           var sectionWrapper = htmlDOM.createElement("div");
-          sectionWrapper.setAttribute("style","overflow:scroll; max-width:100vw;")
+          sectionWrapper.setAttribute("style","overflow:scroll; max-width:95vw;")
           sectionWrapper.innerHTML = section.outerHTML;
           section.parentNode.insertBefore(sectionWrapper, section);
           section.remove();
@@ -178,7 +182,7 @@ function getArticles(){
   XHRExtracts.send();
 }
 
-// load article content from wiki restFull API
+// load article content from wiki restFull API - single article into vier
 function loadModalContents(articleAnchor){
   //display loading text in article title
   document.getElementById("article-title").innerHTML = "Loading...";
@@ -230,7 +234,7 @@ function loadModalContents(articleAnchor){
       }
     }
   };
-  //display error message in article title reset article content to empty iFrame
+  //display error message in article title, reset article content to empty iFrame
   XHRArticleContent.onerror = function(){
     articleTitle.innerHTML = "Error Loading: Try Again";
     viewerBody.innerHTML = '<iframe id="article-content"></iframe>';
@@ -313,7 +317,7 @@ window.addEventListener("keydown", function(event){
   }
 });
 
-//click outside article viewer on modal closes viewer
+//to close the viewer: click outside article viewer on modal
 document.getElementById("article-viewer").addEventListener("click", function(event){
   if(event.target === this){
     hideViewer();
@@ -379,7 +383,7 @@ document.getElementById("main-section").addEventListener("click", function(event
     event.target.previousElementSibling.classList.remove("d-none");
     savedArticles.removeChild(article.parentNode);
     saveToStorage();
-    //click on articles extracts in the main section open article viewer 
+    //click on articles extracts in the main section: open article viewer 
   } else if(event.target.parentNode.tagName.toLowerCase() === "a"){
     //load article into viewer modal
     loadArticleIntoViewer(event.target.parentNode);
@@ -394,17 +398,17 @@ closeViewer.addEventListener("click", function(event){
   hideViewer();
 })
 
-//previouse button in article viewer
+//previouse article button in article viewer: load previous article
 document.getElementsByClassName("previous-button")[0].addEventListener("click", function(event){
   findArticle("previous");
 });
 
-//next button in article viewer
+//next article button in article viewer: load next article
 document.getElementsByClassName("next-button")[0].addEventListener("click", function(event){
   findArticle("next");
 });
   
-//save button in article viewer
+//save article button in article viewer: add to reading list
 saveArticle.addEventListener("click", function(event){
   var title = articleContent.dataset.arttitle;
   var extract = document.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]');
@@ -417,7 +421,7 @@ saveArticle.addEventListener("click", function(event){
   saveToStorage();
 });
 
-//remove button in viewer
+//remove article button in viewer: revome from reading list
 removeArticle.addEventListener("click", function(event){
   var title = articleContent.dataset.arttitle;
   var article = savedArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]');
@@ -435,7 +439,7 @@ removeArticle.addEventListener("click", function(event){
   this.classList.add("d-none");
 });
 
-// remove all articles button
+//remove all articles button: clear reading list
 document.getElementById("remove-all-articles").addEventListener("click", function(event){
   savedArticles.innerHTML = "";
   saveToStorage();
