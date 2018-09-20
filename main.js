@@ -33,7 +33,7 @@ const WIKI_URL = "https://en.wikipedia.org";
 var queryJSON = {
   "action": "query",
   "format": "json", //format
-  "prop": "extracts|pageimages", //properties requested
+  "prop": "extracts|pageimages", //properties requested: images and extracts
   "generator": "random", //generate list of random articles
   "exchars": "500", //number of charaters per extract
   "exlimit": "12", // number of extracts loaded
@@ -451,7 +451,7 @@ document.getElementById("remove-all-articles").addEventListener("click", functio
     $('.navbar-toggler').click();
   }
   //if on the reading list hide the viewer
-  if(document.querySelector("ul .active").children[0].innerText === "Reading List"){
+  if(!removeArticle.classList.contains("d-none")){
     hideViewer();
   }
 });
