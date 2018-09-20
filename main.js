@@ -135,51 +135,58 @@ function hideViewer(){
   articleInReading = undefined;
 }
 
+//create string used for searching previous or next articles in the extract list used with previous and next buttons
+function createTitleString(dataTitle){
+  return '[data-title="'+ dataTitle.replace(/"/gmi, '\\"') +'"]'
+}
+
 //retrieve random articles from wiki action API
 function getArticles(){
   //display loading
-  document.getElementById("loading-extracts").classList.remove("d-none");
-  //XHR request
-  var XHRExtracts = new XMLHttpRequest();
-  XHRExtracts.responseType = "json";
-  XHRExtracts.onload = function(){
-    if (XHRExtracts.readyState === XHRExtracts.DONE) {
-      if (XHRExtracts.status === 200) {
-        document.getElementById("loading-extracts").classList.add("d-none");
-        var receivedData = XHRExtracts.response;
-        Object.keys(receivedData.query.pages).forEach(function(articleData){
-          if(receivedData.query.pages[articleData].thumbnail){
-            var thumb = "<img src='" + receivedData.query.pages[articleData].thumbnail.source + "'>"
-          } else {
-            var thumb = "";
-          }
-          //create data object from API response
-          var dataObj = {
-            url: "https://en.wikipedia.org/api/rest_v1/page/mobile-html/" + encodeURIComponent(receivedData.query.pages[articleData]["title"]),
-            title: receivedData.query.pages[articleData]["title"],
-            extract: receivedData.query.pages[articleData]["extract"],
-            thumbnailSource: thumb
-          };
-          //add data object to template function to insert it into page
-          randomArticles.insertAdjacentHTML("beforeend", toTemplate(document.getElementById("featuredArticleTemp"), dataObj));
-        });
-        return true;
+  return new Promise(function(resolve,reject){
+    document.getElementById("loading-extracts").classList.remove("d-none");
+    //XHR request
+    var XHRExtracts = new XMLHttpRequest();
+    XHRExtracts.responseType = "json";
+    XHRExtracts.onload = function(){
+      if (XHRExtracts.readyState === XHRExtracts.DONE) {
+        if (XHRExtracts.status === 200) {
+          document.getElementById("loading-extracts").classList.add("d-none");
+          var receivedData = XHRExtracts.response;
+          Object.keys(receivedData.query.pages).forEach(function(articleData){
+            if(receivedData.query.pages[articleData].thumbnail){
+              var thumb = "<img src='" + receivedData.query.pages[articleData].thumbnail.source + "'>"
+            } else {
+              var thumb = "";
+            }
+            //create data object from API response
+            var dataObj = {
+              url: "https://en.wikipedia.org/api/rest_v1/page/mobile-html/" + encodeURIComponent(receivedData.query.pages[articleData]["title"]),
+              title: receivedData.query.pages[articleData]["title"],
+              extract: receivedData.query.pages[articleData]["extract"],
+              thumbnailSource: thumb
+            };
+            //add data object to template function to insert it into page
+            randomArticles.insertAdjacentHTML("beforeend", toTemplate(document.getElementById("featuredArticleTemp"), dataObj));
+          });
+        resolve();
+        }
       }
-    }
-  };
-  //display error message
-  XHRExtracts.onerror = function(){
-    var errorMessage = "<h2 class='text-center'>";
-    errorMessage += "Error Loading: Try Refreshing the Page";
-    errorMessage += "</h2>";
-    randomArticles.onscroll = function(){};
-    randomArticles.insertAdjacentHTML("beforeend", errorMessage);
-    return false;
-  };
-  //XHR request
-  XHRExtracts.open("GET", WIKI_URL + createAPIurl(queryJSON));
-  XHRExtracts.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
-  XHRExtracts.send();
+    };
+    //display error message
+    XHRExtracts.onerror = function(){
+      var errorMessage = "<h2 class='text-center'>";
+      errorMessage += "Error Loading: Try Refreshing the Page";
+      errorMessage += "</h2>";
+      randomArticles.onscroll = function(){};
+      randomArticles.insertAdjacentHTML("beforeend", errorMessage);
+      reject();
+    };
+    //XHR request
+    XHRExtracts.open("GET", WIKI_URL + createAPIurl(queryJSON));
+    XHRExtracts.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+    XHRExtracts.send();
+  });
 }
 
 // load article content from wiki restFull API - single article into vier
@@ -255,26 +262,29 @@ function findArticle(previousOrNext){
   }
   var title = articleContent.dataset.arttitle;
   // find and load previous article
-  if(previousOrNext === "previous"){
-    var previousArticle = areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]').parentNode.previousElementSibling.children[0];
+  if(previousOrNext === "previous" &&
+            areaToSearch.querySelector(createTitleString(title)).parentNode.previousElementSibling){
+    var previousArticle = areaToSearch.querySelector(createTitleString(title)).parentNode.previousElementSibling.children[0];
     loadArticleIntoViewer(previousArticle);
     //find and load next article if there is one
   } else if(previousOrNext === "next" &&
-            areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]').parentNode.nextElementSibling){
-    var nextArticle = areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]').parentNode.nextElementSibling.children[0];
+            areaToSearch.querySelector(createTitleString(title)).parentNode.nextElementSibling){
+    var nextArticle = areaToSearch.querySelector(createTitleString(title)).parentNode.nextElementSibling.children[0];
     loadArticleIntoViewer(nextArticle);
     //if it is the last article and the user is in random articles get new articles and load next article into viewer
   } else if(previousOrNext === "next" && areaToSearch === randomArticles){
-    //use a promise to get articles
-    var promiseArticles = new Promise(function (resolve, reject) {
-      getArticles()
-      resolve();
-    });
     //on promise complete find and then load article content into viewer
-    promiseArticles.then(function(){
-      var nextArticle = areaToSearch.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]').parentNode.nextElementSibling.children[0];
+    getArticles().then(function(){
+      //executed on success of getArticles()
+      var nextArticle = areaToSearch.querySelector(createTitleString(title)).parentNode.nextElementSibling.children[0];
       loadArticleIntoViewer(nextArticle);
-    }); 
+    }, function(){
+      //executed on failure
+      articleTitle.innerHTML = "Error Loading: Try Again";
+      viewerBody.innerHTML = '<iframe id="article-content"></iframe>';
+      saveArticle.classList.add("d-none");
+      removeArticle.classList.add("d-none");
+    });
   }
 }
 
@@ -372,9 +382,9 @@ document.getElementById("main-section").addEventListener("click", function(event
     event.target.parentNode.dataset.saved = "false";
     var title = event.target.parentNode.dataset.title;
     //check if article is in the reading list if yes remove it
-    var article = savedArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]');
-    if(randomArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]')){
-      var extract = randomArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]');
+    var article = savedArticles.querySelector(createTitleString(title));
+    if(randomArticles.querySelector(createTitleString(title))){
+      var extract = randomArticles.querySelector(createTitleString(title));
       extract.dataset.saved = "false";
       extract.querySelector(".remove-extract").classList.add("d-none");
       extract.querySelector(".save-extract").classList.remove("d-none");
@@ -399,19 +409,19 @@ closeViewer.addEventListener("click", function(event){
 })
 
 //previouse article button in article viewer: load previous article
-document.getElementsByClassName("previous-button")[0].addEventListener("click", function(event){
+document.getElementById("previous-button").addEventListener("click", function(event){
   findArticle("previous");
 });
 
 //next article button in article viewer: load next article
-document.getElementsByClassName("next-button")[0].addEventListener("click", function(event){
+document.getElementById("next-button").addEventListener("click", function(event){
   findArticle("next");
 });
   
 //save article button in article viewer: add to reading list
 saveArticle.addEventListener("click", function(event){
   var title = articleContent.dataset.arttitle;
-  var extract = document.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]');
+  var extract = document.querySelector(createTitleString(title));
   extract.dataset.saved = "true";
   this.classList.add("d-none");
   extract.querySelector(".save-extract").classList.add("d-none");
@@ -424,9 +434,9 @@ saveArticle.addEventListener("click", function(event){
 //remove article button in viewer: revome from reading list
 removeArticle.addEventListener("click", function(event){
   var title = articleContent.dataset.arttitle;
-  var article = savedArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]');
-  if(randomArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]')){
-    var extract = randomArticles.querySelector('[data-title="'+ title.replace(/"/gmi, '\\"') +'"]');
+  var article = savedArticles.querySelector(createTitleString(title));
+  if(randomArticles.querySelector(createTitleString(title))){
+    var extract = randomArticles.querySelector(createTitleString(title));
     extract.querySelector(".remove-extract").classList.add("d-none");
     extract.querySelector(".save-extract").classList.remove("d-none");
     extract.dataset.saved = "false";
@@ -450,7 +460,7 @@ document.getElementById("remove-all-articles").addEventListener("click", functio
   if($("#nav-button").is(":visible")){
     $('.navbar-toggler').click();
   }
-  //if on the reading list hide the viewer
+  //if article is in the reading list hide the viewer
   if(!removeArticle.classList.contains("d-none")){
     hideViewer();
   }
