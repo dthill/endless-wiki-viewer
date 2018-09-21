@@ -225,9 +225,9 @@ function loadModalContents(articleAnchor){
           if(event.keyCode === 27 || event.keyCode === 8){
             hideViewer();
           } else if(event.keyCode === 37){
-            loadPrevious();
+            findArticle("previous");
           } else if(event.keyCode === 39){
-            loadNext();
+            findArticle("next");
           }
         });
         articleContent.contentDocument.close();
@@ -321,9 +321,9 @@ window.addEventListener("keydown", function(event){
     event.preventDefault();
     hideViewer();
   } else if(event.keyCode === 37){
-    loadPrevious();
+    findArticle("previous");
   } else if(event.keyCode === 39){
-    loadNext();
+    findArticle("next");
   }
 });
 
