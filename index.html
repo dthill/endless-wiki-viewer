@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+	<!-- Navbar -->
 	<nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
 	  	<button id="nav-button" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
 	    	<span class="navbar-toggler-icon"></span>
@@ -30,6 +31,7 @@
   		</div>
 	</nav>
 	
+	<!-- Main Section -->
 	<div id="main-section" class="container collapse show multi-collapse">
 		<div id="articles">	
 		</div>
@@ -40,6 +42,7 @@
 		</div>
 	</div>
 
+	<!-- Article-Viewer -->
 	<div id="article-viewer" class="collapse multi-collapse bg-secondary">
 		<div class="container">
 			<div class="viewer-header bg-light p-1 position-sticky sticky-top">
@@ -57,6 +60,7 @@
 		</div>
 	</div>
 
+	<!-- Template for Random Articles -->
 	<script id="featuredArticleTemp" type="text/x-template">
 		<div class="featuredArticle clearfix mt-1">
 			<a href="{{url}}" data-title="{{title}}" data-saved="false">

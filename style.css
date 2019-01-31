@@ -1,14 +1,22 @@
 
+/*
+Navbar
+*/
+.nav-link{
+  padding: 1em;
+}
+
+
+
+/*
+Main Section: Random Articles, Saved Articles
+*/
 #articles, #saved-articles {
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
   height: calc(100vh - 4rem);
   margin: 0;
   padding: 0;
-}
-
-.nav-link{
-  padding: 1em;
 }
 
 .featuredArticle img {
@@ -18,13 +26,23 @@
   margin-top: 1rem;
 }
 
-#articles a, #saved-articles a, #article-title a{
+#articles a, #saved-articles a{
   text-decoration: none;
   color: black;
 }
 
+
+
+/*
+Article Viewe
+*/
 #article-title {
   word-wrap: break-word;
+}
+
+#article-title a{
+  text-decoration: none;
+  color: black;
 }
 
 #article-content {
