@@ -39,6 +39,7 @@ var articleContent;
 const saveArticle = document.getElementById("save-article");
 const removeArticle = document.getElementById("remove-article");
 const closeViewer = document.getElementById("close-viewer");
+const loadingExtracts = document.getElementById("loading-extracts");
 
 
 function toTemplate(htmlTemplate, dataObject){
@@ -77,9 +78,6 @@ function retrieveFromStorage(){
 function getArticles(){
   var XHRExtracts = new XMLHttpRequest();
   XHRExtracts.responseType = "json";
-  XHRExtracts.onprogress = function(){
-    //show loading gif
-  };
   XHRExtracts.onload = function(){
     if (XHRExtracts.readyState === XHRExtracts.DONE) {
       if (XHRExtracts.status === 200) {
@@ -97,6 +95,7 @@ function getArticles(){
             thumbnailSource: thumb
           };
           randomArticles.insertAdjacentHTML("beforeend", toTemplate(document.getElementById("featuredArticleTemp"), dataObj));
+          loadingExtracts.classList.add("d-none");
         });
       }
     }
@@ -110,8 +109,6 @@ function getArticles(){
   XHRExtracts.open("GET", WIKI_URL + createAPIurl(queryJSON));
   XHRExtracts.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
   XHRExtracts.send();
-  //old implementation
-  //$.getJSON(WIKI_URL + createAPIurl(queryJSON) + "&callback=?", function(receivedData){});
 }
 
 // load modal modal content
@@ -260,7 +257,7 @@ closeViewer.addEventListener("click", function(event){
 
 
 //previouse button
-document.getElementsByClassName("previous-button")[0].addEventListener("click", function(event){
+document.getElementById("previous-button").addEventListener("click", function(event){
   if(document.querySelector("ul .active").children[0].innerText === "Random Articles"){
     var areaToSearch = randomArticles;
   } else {
@@ -282,7 +279,7 @@ document.getElementsByClassName("previous-button")[0].addEventListener("click", 
   }
 });
 //next button
-document.getElementsByClassName("next-button")[0].addEventListener("click", function(event){
+document.getElementById("next-button").addEventListener("click", function(event){
   if(document.querySelector("ul .active").children[0].innerText === "Random Articles"){
     var areaToSearch = randomArticles;
   } else {
